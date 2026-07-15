@@ -109,3 +109,16 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://oftalmag.ru/personal/orders/
 ```
 
 Локально: `./scripts/start-dev.sh` и curl на `:8087`.
+
+## Шаблон enext: CSS
+
+На **prod** Bitrix подключает `template_styles.min.css`, локально часто — `template_styles.css`.
+
+Если правили `bitrix/templates/enext/template_styles.css`, **обязательно пересобрать min**:
+
+```bash
+cd oftalmag.ru
+npx clean-css-cli -o bitrix/templates/enext/template_styles.min.css bitrix/templates/enext/template_styles.css
+```
+
+Иначе на prod ломается вёрстка (пример: popup «Выбор города» без `display:none`).
