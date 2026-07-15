@@ -1,0 +1,36 @@
+---
+description: Деплой oftalmag.ru — только через git, затем deploy-prod.sh
+alwaysApply: true
+---
+
+# Выкат: сначала git, потом prod
+
+**Единственный путь на прод:** commit + push в `origin/main` → `./scripts/deploy-prod.sh`.
+
+## Запрещено
+
+- Копировать файлы на prod через `scp` без commit в git.
+- Править код напрямую в `/var/www/oftalmag_ru_usr/data/www/oftalmag.ru/` без commit.
+
+## Локально
+
+```bash
+cd oftalmag.ru
+git add … && git commit -m "…" && git push origin main
+./scripts/deploy-prod.sh
+```
+
+## На сервере (делает deploy-prod.sh)
+
+- SSH `almamed`, path `/var/www/oftalmag_ru_usr/data/www/oftalmag.ru`
+- `git fetch origin main` + `git checkout FETCH_HEAD -- .`
+- Бэкап/восстановление `bitrix/license_key.php`
+- `chown oftalmag_ru_usr:oftalmag_ru_usr`, сброс `bitrix/cache/*`
+
+## Не в git (не трогать при деплое)
+
+`upload/`, `.settings.php`, `dbconn.php`, `.htaccess`, `license_key.php` (если был — восстанавливается).
+
+## Агент
+
+После правок: push → deploy → curl-verify (`/` и `/personal/orders/`). Не просить пользователя проверить, пока сам не проверил.

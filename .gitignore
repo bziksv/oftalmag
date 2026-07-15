@@ -76,5 +76,10 @@ Thumbs.db
 # Local overlays
 bitrix/php_interface/dbconn.local.php
 
+# --- Локальная разработка (Mac) ---
+.local/run/
+.local/backup/
+.local/db.env
+
 *.bak.*
 *.bak
