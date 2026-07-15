@@ -1,0 +1,5 @@
+<?
+$MESS["ARTURGOLUBEV_CSSINLINER_MENU_MAIN"] = "Ускорение загрузки сайта";
+$MESS["ARTURGOLUBEV_CSSINLINER_SUBMENU_SETTINGS"] = "Основные настройки";
+$MESS["ARTURGOLUBEV_CSSINLINER_SUBMENU_IMAGE_OPTIMIZE"] = "Оптимизация изображений";
+?>

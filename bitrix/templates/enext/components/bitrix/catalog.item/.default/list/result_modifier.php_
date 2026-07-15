@@ -1,0 +1,53 @@
+<?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+
+use Bitrix\Main\Config\Option,
+	Bitrix\Main\Localization\Loc,
+	Bitrix\Main\Type\Collection,	
+	Bitrix\Catalog\Product\Price;
+
+
+	?>
+	<pre>
+		<?print_r($item['PROPERTIES'])?>
+	</pre>	
+	<?
+
+	foreach($item['PROPERTIES'] as $prop) {
+		if($prop['CODE'] == 'preimushchestva' && $arParams['PRODUCTS_VIEW'] == 'LIST') {
+
+			if(empty($prop['VALUE'])) {
+				foreach($arResult['SECTION_PATH'] as $arSectionPath) {
+					$sectionIds[] = $arSectionPath['ID'];
+				}
+				unset($arSectionPath);
+				
+				if(!empty($sectionIds)) {		
+					$rsSections = CIBlockSection::GetList(array('DEPTH_LEVEL' => 'DESC'), array('ID' => $sectionIds, 'IBLOCK_ID' => $arResult['IBLOCK_ID']), false, array('ID', 'UF_ADVANTAGES'));
+					while($arSection = $rsSections->GetNext()) {
+
+					if(empty($prop['VALUE']) && !empty($arSection['UF_ADVANTAGES']))
+							$prop['VALUE'] = $arSection['UF_ADVANTAGES'];
+					}
+					unset($arSection, $rsSections);
+				}
+				unset($sectionIds);
+			}
+
+			if(!empty($prop['VALUE'])) {
+				if(!is_array($prop['VALUE'])) {
+					$advantagesIds[] = $prop['VALUE'];
+				} else {
+					foreach($prop['VALUE'] as $val) {
+						$advantagesIds[] = $val;
+					}
+					unset($val);
+				}
+			}
+		}
+	}
+
+	?>
+	<pre>
+		<?print_r($advantagesIds)?>
+	</pre>	
+	<?

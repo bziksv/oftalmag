@@ -1,0 +1,28 @@
+.agci_admin_page {
+		border-radius: 5px;
+		border: 1px solid;
+		-webkit-box-shadow: inset 0 1px 0 #fff;
+		box-shadow: inset 0 1px 0 #fff;
+		margin: 16px 0;
+		text-shadow: 0 1px 0 rgba(255,255,255, 0.7);
+		padding: 15px 30px 15px 18px;
+		position: relative;
+		display: block;
+		color: #111;
+		font-size: 14px;
+		line-height: 20px;
+		background: #fff;
+		border-color: #f5f9f9;
+	}
+		.agci_admin_page .line {
+			margin-bottom: 10px;
+		}
+		.agci_admin_page .btn {
+			border: 1px transparent solid;
+			background: #3bc8f5;
+			-webkit-box-shadow: none;
+					box-shadow: none;
+			color: #fff;
+		}
+		.agci_admin_page .optimize-table {
+		}

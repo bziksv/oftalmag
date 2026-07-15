@@ -1,0 +1,9 @@
+/***CUSTOM CSS RULES FOR YOUR SITE***/
+
+body{
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	-o-user-select: auto;	
+	user-select: auto;
+	cursor: auto;
+}

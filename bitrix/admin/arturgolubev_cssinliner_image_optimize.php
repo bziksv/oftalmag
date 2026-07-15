@@ -1,0 +1,1 @@
+<?require($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/arturgolubev.cssinliner/scripts/image_optimize.php');?>
