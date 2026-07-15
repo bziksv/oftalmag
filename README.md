@@ -18,9 +18,9 @@ cp .local/db.env.example .local/db.env
 ./scripts/setup-local-db.sh --background
 ./scripts/start-dev.sh
 
-# деплой
+# деплой (push всегда после правок; prod — только по запросу)
 git push origin main
-./scripts/deploy-prod.sh
+# ./scripts/deploy-prod.sh   # когда попросите выкатить
 ```
 
 Git root = **эта папка** (как на сервере). `bitrix/modules/` — в git.

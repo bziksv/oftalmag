@@ -66,17 +66,20 @@ Soft-режим: php-fpm `ondemand`, max 2 workers, 256M RAM.
 
 ## Деплой на prod
 
-**Только через git:** commit → push → `./scripts/deploy-prod.sh`.
+**Git после правок — всегда.** **Prod — только по явной просьбе.**
+
+1. Обычно: `git commit` + `git push origin main` (на сервер **не** трогаем).
+2. Когда попросили выкатить: `./scripts/deploy-prod.sh` (pull с GitHub на prod).
 
 ```bash
 cd oftalmag.ru
-git add … && git commit -m "…" && git push origin main
+git add … && git commit -m "…" && git push origin main   # после правок
+
+# только когда пользователь просит:
 ./scripts/deploy-prod.sh
 ```
 
-Скрипт: push → SSH на `almamed` → `git fetch` → `git checkout FETCH_HEAD -- .` → восстановление `license_key.php` → `chown` → сброс кэша.
-
-**Запрещено:** правки напрямую на prod без commit, `scp` файлов кода.
+**Запрещено:** автодеплой на prod, правки на prod без commit, `scp` файлов кода.
 
 ## Личный кабинет (ЧПУ)
 

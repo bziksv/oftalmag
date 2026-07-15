@@ -3,34 +3,43 @@ description: Деплой oftalmag.ru — только через git, зате�
 alwaysApply: true
 ---
 
-# Выкат: сначала git, потом prod
+# Git и prod — раздельно
 
-**Единственный путь на прод:** commit + push в `origin/main` → `./scripts/deploy-prod.sh`.
+**После правок агент делает:** commit + push в `origin/main`.
+
+**На prod выкатывать только когда пользователь явно просит** («выкати на прод», «deploy» и т.п.).  
+До этого — **не** запускать `./scripts/deploy-prod.sh`, **не** SSH на prod.
+
+**Единственный путь на prod (когда попросили):** push уже в git → `./scripts/deploy-prod.sh`.
 
 ## Запрещено
 
+- Деплоить на prod без явной просьбы пользователя.
 - Копировать файлы на prod через `scp` без commit в git.
 - Править код напрямую в `/var/www/oftalmag_ru_usr/data/www/oftalmag.ru/` без commit.
 
-## Локально
+## Обычный workflow (после правок)
 
 ```bash
 cd oftalmag.ru
 git add … && git commit -m "…" && git push origin main
+# deploy-prod.sh — только по запросу пользователя
+```
+
+## Prod (только по запросу)
+
+```bash
+cd oftalmag.ru
 ./scripts/deploy-prod.sh
 ```
 
-## На сервере (делает deploy-prod.sh)
-
-- SSH `almamed`, path `/var/www/oftalmag_ru_usr/data/www/oftalmag.ru`
-- `git fetch origin main` + `git checkout FETCH_HEAD -- .`
-- Бэкап/восстановление `bitrix/license_key.php`
-- `chown oftalmag_ru_usr:oftalmag_ru_usr`, сброс `bitrix/cache/*`
+Скрипт: SSH `almamed` → `git fetch` → `git checkout FETCH_HEAD -- .` → восстановление `license_key.php` → `chown` → сброс кэша.
 
 ## Не в git (не трогать при деплое)
 
-`upload/`, `.settings.php`, `dbconn.php`, `.htaccess`, `license_key.php` (если был — восстанавливается).
+`upload/`, `.settings.php`, `dbconn.php`, `.htaccess`, `license_key.php`.
 
 ## Агент
 
-После правок: push → deploy → curl-verify (`/` и `/personal/orders/`). Не просить пользователя проверить, пока сам не проверил.
+- После правок: **только push в git**, сообщить commit/URL.
+- Prod: deploy + curl-verify — **только если пользователь попросил выкатить**.
