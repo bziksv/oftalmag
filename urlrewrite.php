@@ -112,4 +112,20 @@ $arUrlRewrite=array (
     'PATH' => '/news/index.php',
     'SORT' => 100,
   ),
+  54 =>
+  array (
+    'CONDITION' => '#^/personal/order/#',
+    'RULE' => '',
+    'ID' => 'bitrix:sale.personal.order',
+    'PATH' => '/personal/order/index.php',
+    'SORT' => 100,
+  ),
+  55 =>
+  array (
+    'CONDITION' => '#^/personal/#',
+    'RULE' => '',
+    'ID' => 'bitrix:sale.personal.section',
+    'PATH' => '/personal/index.php',
+    'SORT' => 100,
+  ),
 );
