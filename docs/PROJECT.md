@@ -101,6 +101,26 @@ git add … && git commit -m "…" && git push origin main   # после пра
 - `niges.cookiesaccept`, `sng.secure`, `prime.cleaner`
 - `arturgolubev.cssinliner`
 
+## Инструменты
+
+### Реестр картинок сайта
+
+| | |
+|---|---|
+| URL | http://127.0.0.1:8087/tools/site-images.php |
+| Prod | https://oftalmag.ru/tools/site-images.php |
+| Файл | `tools/site-images.php` |
+
+Собирает изображения из `b_file` / `upload/`. В таблице:
+
+- где используется (элемент инфоблока, свойство, UF)
+- прямая ссылка на файл (всегда `https://oftalmag.ru/...`)
+- кнопка «Скачать»
+- даты создания/изменения (файл + БД)
+- экспорт в Excel (`?export=excel`)
+
+Доступ: localhost или админ Bitrix.
+
 ## Проверка после изменений
 
 ```bash
