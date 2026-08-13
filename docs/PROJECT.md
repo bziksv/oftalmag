@@ -132,13 +132,24 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://oftalmag.ru/personal/orders/
 
 ## Шаблон enext: CSS
 
-На **prod** Bitrix подключает `template_styles.min.css`, локально часто — `template_styles.css`.
-
-Если правили `bitrix/templates/enext/template_styles.css`, **обязательно пересобрать min**:
+На **prod** Bitrix часто подключает `.min.css`, локально — полный `.css`. После правок CSS **обязательно пересобирать min**, иначе на prod старая вёрстка.
 
 ```bash
 cd oftalmag.ru
 npx clean-css-cli -o bitrix/templates/enext/template_styles.min.css bitrix/templates/enext/template_styles.css
+npx clean-css-cli -o bitrix/templates/enext/components/bitrix/menu/catalog_menu_interface_2_0_1/style.min.css \
+  bitrix/templates/enext/components/bitrix/menu/catalog_menu_interface_2_0_1/style.css
+npx clean-css-cli -o bitrix/templates/enext/components/bitrix/catalog/.default/style.min.css \
+  bitrix/templates/enext/components/bitrix/catalog/.default/style.css
 ```
 
-Иначе на prod ломается вёрстка (пример: popup «Выбор города» без `display:none`).
+Примеры поломок без пересборки: popup «Выбор города»; дубли шапки (Избранное/Корзина); кривые «Сортировка» / «Вид отображения» в каталоге.
+
+## Каталог: сортировка и вид
+
+В панели раздела (`catalog/.default/section_vertical.php`) два блока:
+
+- сортировка (`data-role="catalogSectionSort"`)
+- вид: Плитка / Список / Прайс (`data-role="catalogSectionView"`, `?view=CARD|LIST|PRICE`)
+
+Стили контейнера — `.catalog-section-sort-container` в `catalog/.default/style.css` (колонка, выравнивание вправо, чтобы стрелки совпадали). После правок — пересобрать `style.min.css` (см. выше). Проверять **оба** вида: Список и Плитка.

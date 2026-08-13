@@ -464,21 +464,30 @@
 }
 
 /***SECTION_SORT***/
+/* Sort + view switcher: column, right-aligned so arrows line up */
+.catalog-section-sort-container{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
+}
+
 .catalog-section-sort{	
-	padding: 10px 0 10px 24px;
+	padding: 6px 0 6px 24px;
 	position: relative;
 	cursor: pointer;
-	display: inline-block;
+	display: block;
 }
 
 .catalog-section-sort-block{
-	display: table;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 }
 
 .catalog-section-sort-text,
 .catalog-section-sort-arrow{	
-	display: table-cell;
-	vertical-align: middle;
+	display: block;
 }
 
 .catalog-section-sort-text{	
@@ -620,6 +629,10 @@
 		display: table-cell;
 		vertical-align: middle;
 	}
+
+	.catalog-section-sort-container{
+		text-align: right;
+	}
 	
 	.catalog-section-filter{
 		padding: 15px 0;
@@ -634,11 +647,13 @@
 	}
 	
 	.catalog-section-sort{
-		padding: 15px 0;
+		display: inline-block;
+		padding: 8px 0;
+		vertical-align: middle;
 	}
 
 	.catalog-section-sort-block{
-		margin: 0 auto;		
+		margin: 0 0 0 auto;
 	}
 	
 	.catalog-section-sort-text{
