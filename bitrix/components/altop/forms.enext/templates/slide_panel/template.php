@@ -39,27 +39,11 @@ $containerName = "slide-panel-form-".$obName;?>
 			<input type="hidden" name="USER_CONSENT_URL" value="" />
 			<div class="form-group form-group-checkbox">
 				<div class="checkbox">
-					<?$fields = array();
-					foreach($arResult["IBLOCK"]["PROPERTIES"] as $arProp) {
-						if($arProp["CODE"] != "OBJECT_ID" && $arProp["CODE"] != "PRODUCT_ID" && $arProp["CODE"] != "OFFER_ID" && $arProp["USER_TYPE"] != "HTML")
-							$fields[] = $arProp["NAME"];
-					}
-					unset($arProp);?>
-					<?$APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
-						array(
-							"ID" => $arParams["USER_CONSENT_ID"],
-							"INPUT_NAME" => "USER_CONSENT",
-							"IS_CHECKED" => $arParams["USER_CONSENT_IS_CHECKED"],
-							"AUTO_SAVE" => "N",
-							"IS_LOADED" => $arParams["USER_CONSENT_IS_LOADED"],
-							"REPLACE" => array(
-								"button_caption" => Loc::getMessage("FORMS_SLIDE_PANEL_SUBMIT"),
-								"fields" => $fields
-							)
-						),
-						$component
-					);?>
-					<?unset($fields);?>
+					<label>
+						<input type="checkbox" value="Y" name="USER_CONSENT"<?=($arParams["USER_CONSENT_IS_CHECKED"] == "Y" ? ' checked' : '')?> />
+						<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
+						<span class="check-title">Нажимая на эту кнопку, я даю свое согласие на обработку персональных данных и соглашаюсь с условиями <a target="_blank" href="/upload/politics-oftalmag.png">политики обработки персональных данных</a>.</span>
+					</label>
 				</div>
 			</div>
 		<?}
