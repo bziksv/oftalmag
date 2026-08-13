@@ -464,30 +464,31 @@
 }
 
 /***SECTION_SORT***/
-/* Sort + view switcher: column, right-aligned so arrows line up */
+/* Sort + view in one row (like lormag); nowrap so the panel stays compact */
 .catalog-section-sort-container{
 	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	justify-content: center;
-}
-
-.catalog-section-sort{	
-	padding: 6px 0 6px 24px;
-	position: relative;
-	cursor: pointer;
-	display: block;
-}
-
-.catalog-section-sort-block{
-	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: flex-end;
 }
 
+.catalog-section-sort{	
+	padding: 10px 0 10px 24px;
+	position: relative;
+	cursor: pointer;
+	display: block;
+	flex: 0 0 auto;
+}
+
+.catalog-section-sort-block{
+	display: table;
+}
+
 .catalog-section-sort-text,
 .catalog-section-sort-arrow{	
-	display: block;
+	display: table-cell;
+	vertical-align: middle;
 }
 
 .catalog-section-sort-text{	
@@ -629,10 +630,6 @@
 		display: table-cell;
 		vertical-align: middle;
 	}
-
-	.catalog-section-sort-container{
-		text-align: right;
-	}
 	
 	.catalog-section-filter{
 		padding: 15px 0;
@@ -648,12 +645,11 @@
 	
 	.catalog-section-sort{
 		display: inline-block;
-		padding: 8px 0;
-		vertical-align: middle;
+		padding: 15px 0;
 	}
 
 	.catalog-section-sort-block{
-		margin: 0 0 0 auto;
+		margin: 0 auto;		
 	}
 	
 	.catalog-section-sort-text{

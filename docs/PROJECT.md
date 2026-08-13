@@ -147,9 +147,9 @@ npx clean-css-cli -o bitrix/templates/enext/components/bitrix/catalog/.default/s
 
 ## Каталог: сортировка и вид
 
-В панели раздела (`catalog/.default/section_vertical.php`) два блока:
+В панели раздела (`catalog/.default/section_vertical.php`) два блока в **одну строку** (как на lormag):
 
 - сортировка (`data-role="catalogSectionSort"`)
 - вид: Плитка / Список / Прайс (`data-role="catalogSectionView"`, `?view=CARD|LIST|PRICE`)
 
-Стили контейнера — `.catalog-section-sort-container` в `catalog/.default/style.css` (колонка, выравнивание вправо, чтобы стрелки совпадали). После правок — пересобрать `style.min.css` (см. выше). Проверять **оба** вида: Список и Плитка.
+Стили: `.catalog-section-sort-container` — `flex` row + `nowrap`, чтобы панель оставалась компактной; при скролле sticky-панель (`catalog-section-panel.fixed`) садится под шапку. После правок CSS — пересобрать `style.min.css`. Проверять Список и Плитку.
