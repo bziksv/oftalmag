@@ -153,3 +153,5 @@ npx clean-css-cli -o bitrix/templates/enext/components/bitrix/catalog/.default/s
 - вид: Плитка / Список / Прайс (`data-role="catalogSectionView"`, `?view=CARD|LIST|PRICE`)
 
 Стили: `.catalog-section-sort-container` — `flex` row + `nowrap`, чтобы панель оставалась компактной; при скролле sticky-панель (`catalog-section-panel.fixed`) садится под шапку. После правок CSS — пересобрать `style.min.css`. Проверять Список и Плитку.
+
+**Важно:** не оставлять глобальные правила вроде `.container-ws { padding-top: … !important }` в компонентах (пример: `news.list/block_brands_catalog`) — они раздувают заголовок раздела до скролла.
