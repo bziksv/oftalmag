@@ -99,7 +99,10 @@ git add … && git commit -m "…" && git push origin main   # после пра
 
 - `altop.enext` — шаблон/магазин
 - `niges.cookiesaccept`, `sng.secure`, `prime.cleaner`
+- `prime.alerts` — политика e-mail (`.ru`/`.su`); файлы в `local/modules/prime.alerts/`, настройки: `/bitrix/admin/settings.php?mid=prime.alerts`
 - `arturgolubev.cssinliner`
+
+После копирования `prime.alerts` с prod на локалку модуль нужно **установить в БД** (файлов мало): Marketplace/модули → установить, либо `DoInstall()` / запись в `b_module` + обработчики. Иначе в админке «не работает», на витрине нет `PRIME_ALERTS`.
 
 ## Инструменты
 
