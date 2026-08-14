@@ -63,7 +63,7 @@ sleep 1
 HTTP=$(curl -sS -o /tmp/oftalmag-check.html -w '%{http_code}' --max-time 60 http://127.0.0.1:8087/ || echo 000)
 
 echo "soft http://127.0.0.1:8087/ → HTTP $HTTP"
-echo "php-fpm :9087 (ondemand, max 2 workers, 256M)"
+echo "php-fpm :9087 (ondemand, max 4 workers, 512M)"
 echo "stop: ./scripts/stop-dev.sh"
 
 if [ "$HTTP" = "000" ]; then

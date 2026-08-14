@@ -50,7 +50,7 @@ cp .local/db.env.example .local/db.env   # один раз
 ./scripts/stop-dev.sh
 ```
 
-Soft-режим: php-fpm `ondemand`, max 2 workers, 256M RAM.
+Soft-режим: php-fpm `ondemand`, max 4 workers, **512M** RAM (секции каталога ~1MB HTML + cssinliner; при 256M бывают белые страницы).
 
 ### Занятые порты (соседние проекты)
 
