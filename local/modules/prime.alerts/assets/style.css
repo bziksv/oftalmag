@@ -1,6 +1,6 @@
 /* prime.alerts — notice under email field */
 .prime-alerts-notice {
-	margin: 12px 0 0;
+	margin: 12px 0 16px;
 	border: 1px solid #e0c36a;
 	border-radius: 8px;
 	background: #fffdf6;
