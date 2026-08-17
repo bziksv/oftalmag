@@ -346,7 +346,9 @@
 .catalog-menu-dropdown-menu > ul > li > a > .catalog-menu-arrow{
 	display: none;
 }
-
+.only_mob{
+	display: none;
+}
 /***PHONES***/
 @media(max-width: 1042px){
 	.slide-menu-interface-2-0-1-active{
@@ -525,7 +527,7 @@
 		max-width: 100%;
 		max-height: 100%;
 	}
-	
+
 	.catalog-menu-text{
 		flex-grow: unset;
 		width: 100%;
@@ -546,6 +548,101 @@
 	.catalog-menu-arrow{
 		display: none;
 	}
+
+	/** ПЕРЕНЕСТИ **/
+
+	/** ПЕРЕНЕСТИ **/
+
+	.catalog-menu > ul > li > a > .catalog-menu-arrow{
+		display: block;
+		position: absolute;
+		right: 5px;
+		top: 24px;
+	}
+
+	.catalog-section-sort-container, .catalog-section-toggle-wrapper{
+		display: none;
+	}
+	.catalog-section-filter-block {
+	    justify-content: left;
+	    padding-left: 18px;
+	}
+	.top-panel__col.top-panel__tfoot{
+		display: none;
+	}
+	.hidden-print.top-panel-wrapper{
+	    position: fixed;
+	    left: 0;
+	    right: 0;
+	    top: 0;
+	    background: #fff;
+	    z-index: 205;
+	}
+	.catalog-section-panel.fixed{
+		position: static;
+	}
+	.page-wrapper{
+		padding-top: 56px;
+	}
+	.top_panel__search.only_mob{
+		top:10px;
+		    position: relative;
+	}
+	.only_mob{
+		display: block;
+	}
+	.product-item-icons-container{
+	    background: none;
+	}
+
+	.top_panel__search.only_mob #title-search {
+	    float: left;
+	    width: 70%;
+	}
+	.top_panel__search.only_mob .top-panel__col.top-panel__mini-cart {
+        overflow: hidden;
+        margin-left: 68px;
+        width: auto;
+        display: block;
+        margin-right: 15px;
+	}
+	.top_panel__search.only_mob .top-panel__col.top-panel__mini-cart .mini-cart__title {
+	    display: none !important;
+	}
+	.top_panel__search.only_mob .top-panel__col.top-panel__mini-cart .mini-cart{
+        height: 40px;
+    }
+
+    .top_panel__search.only_mob .top-panel__col.top-panel__search-container{
+	    float: left;
+	    top: -10px;
+        left: 20px;
+	    position: absolute;
+    }
+    .top_panel__search.only_mob .top-panel__col.top-panel__search-container .top-panel__search-btn-title{
+    	display: none;
+    }
+
+
+
+.slide-panel-cart__content .btn {
+	    padding: 0 5px;
+}
+
+.slide-panel-cart__content .slide-panel-basket-footer-row+.slide-panel-basket-footer-row {
+    margin-top: 13px;
+}
+.slide-panel-cart__content .slide-panel-basket-footer{
+padding: 15px 18px 15px;
+}
+
+.slide-panel-cart__content .slide-panel-basket-footer-row+.slide-panel-basket-footer-row {
+    height: 38px;
+}
+.slide-panel-cart__content .btn {
+    height: 38px;
+}
+
 
 	/***DROPDOWN_MENU***/
 	.catalog-menu > ul > li > .catalog-menu-dropdown-menu{

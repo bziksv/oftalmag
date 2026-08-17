@@ -464,10 +464,21 @@
 }
 
 /***SECTION_SORT***/
+/* Sort + view in one row (like lormag); nowrap so the panel stays compact */
+.catalog-section-sort-container{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: flex-end;
+}
+
 .catalog-section-sort{	
 	padding: 10px 0 10px 24px;
 	position: relative;
 	cursor: pointer;
+	display: block;
+	flex: 0 0 auto;
 }
 
 .catalog-section-sort-block{
@@ -633,6 +644,7 @@
 	}
 	
 	.catalog-section-sort{
+		display: inline-block;
 		padding: 15px 0;
 	}
 
