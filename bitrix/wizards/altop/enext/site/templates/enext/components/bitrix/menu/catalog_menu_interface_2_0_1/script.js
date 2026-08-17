@@ -52,6 +52,11 @@
 								
 								var parentMenu = BX.findParent(target, {attrs: {'data-entity': 'dropdown-menu'}});
 								if(!!parentMenu && BX.hasClass(parentMenu, 'catalog-menu')) {
+									var otherMenus = parentMenu.querySelectorAll(':scope > ul > li > [data-entity="dropdown-menu"]');
+									for(var om = 0; om < otherMenus.length; om++) {
+										if(otherMenus[om] !== target.querySelector('[data-entity="dropdown-menu"]'))
+											BX.style(otherMenus[om], 'left', '');
+									}
 									var parentMenuUl = parentMenu.querySelector('ul'),
 										scrollWidth = 0;
 									
@@ -394,3 +399,25 @@
 		}
 	}
 })();
+
+
+
+
+var isAscOrder = true;
+$(document).ready(function () {
+
+    var mylist = $('#menu');
+    var listitems = mylist.children('li').get();
+
+    listitems.sort(function(a, b) {
+        var compA = $(a).data('text').toUpperCase();
+        var compB = $(b).data('text').toUpperCase();
+
+        return (isAscOrder ? 1 : -1) * ((compA < compB) ? -1 : (compA > compB) ? 1 : 0);
+    });
+
+    isAscOrder = !isAscOrder;
+
+    $.each(listitems, function(idx, itm) { mylist.append(itm); });
+
+});

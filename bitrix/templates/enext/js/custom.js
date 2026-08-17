@@ -8,13 +8,17 @@ $(function(){
 	});
 
 	$("[data-replace-content]").each(function(i, el){
-		let self = $(el);
-		self.replaceWith('<a>' + self.html() +'</a>')
+		var $el = $(el);
+		var href = $el.attr("data-replace-content") || "";
+		$el.replaceWith($("<a></a>").attr("href", href).html($el.html()));
 	});
 
 	$("[data-href-content]").each(function(i, el){
-		let self = $(el);
-		self.parents('a').attr("href", self.attr("href-content"))
+		var $el = $(el);
+		var href = $el.attr("data-href-content") || "";
+		if(href) {
+			$el.closest("a").attr("href", href);
+		}
 	});
 
 });

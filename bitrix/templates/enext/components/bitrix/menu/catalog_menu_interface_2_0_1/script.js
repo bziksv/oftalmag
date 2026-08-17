@@ -52,6 +52,11 @@
 								
 								var parentMenu = BX.findParent(target, {attrs: {'data-entity': 'dropdown-menu'}});
 								if(!!parentMenu && BX.hasClass(parentMenu, 'catalog-menu')) {
+									var otherMenus = parentMenu.querySelectorAll(':scope > ul > li > [data-entity="dropdown-menu"]');
+									for(var om = 0; om < otherMenus.length; om++) {
+										if(otherMenus[om] !== target.querySelector('[data-entity="dropdown-menu"]'))
+											BX.style(otherMenus[om], 'left', '');
+									}
 									var parentMenuUl = parentMenu.querySelector('ul'),
 										scrollWidth = 0;
 									
