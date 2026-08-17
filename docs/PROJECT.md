@@ -148,6 +148,16 @@ npx clean-css-cli -o bitrix/templates/enext/components/bitrix/catalog/.default/s
 
 Примеры поломок без пересборки: popup «Выбор города»; дубли шапки (Избранное/Корзина); кривые «Сортировка» / «Вид отображения» в каталоге.
 
+То же для **JS**: на prod Bitrix часто склеивает в `bitrix/cache/js/...` из `script.min.js`, локально — из `script.js`. После правок анимации «в корзину» и т.п. синхронизировать оба:
+
+```bash
+npx terser bitrix/templates/enext/components/bitrix/catalog.item/.default/script.js -c -m \
+  -o bitrix/templates/enext/components/bitrix/catalog.item/.default/script.min.js
+# то же для catalog.item/gift, catalog.element/.default, catalog.element/article
+```
+
+После выката на prod сбросить `bitrix/cache/js/*` (делает `deploy-prod.sh`).
+
 ## Каталог: сортировка и вид
 
 В панели раздела (`catalog/.default/section_vertical.php`) два блока в **одну строку** (как на lormag):

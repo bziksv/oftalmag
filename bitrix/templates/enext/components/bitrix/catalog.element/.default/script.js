@@ -4853,24 +4853,34 @@
 						var animatedImg = document.body.querySelector('.animated-image');
 						if(!!animatedImg) {
 							var topPanel = document.querySelector('.top-panel'),
-								miniCart = topPanel.querySelector('.mini-cart__cart');
+								miniCart = null,
+								carts = topPanel ? topPanel.querySelectorAll('.mini-cart__cart') : [];
+							for(var ci = 0; ci < carts.length; ci++) {
+								if(carts[ci].offsetParent !== null || carts[ci].getClientRects().length > 0) {
+									miniCart = carts[ci];
+									break;
+								}
+							}
+							if(!miniCart && carts.length) {
+								miniCart = carts[carts.length - 1];
+							}
 							
 							new BX.easing({
 								duration: 500,
 								start: {
 									width: productPictContainerWidth,
-									right: BX.pos(productPictContainer).right,
+									left: BX.pos(productPictContainer).left,
 									top: BX.pos(productPictContainer).top
 								},
 								finish: {
 									width: 70,							
-									right: BX.pos(miniCart).right,
+									left: BX.pos(miniCart).left,
 									top: BX.pos(miniCart).top
 								},
 								transition: BX.easing.transitions.linear,
 								step: BX.delegate(function(state) {
 									animatedImg.style.width = state.width + 'px';							
-									animatedImg.style.right = state.right + 'px';
+									animatedImg.style.left = state.left + 'px';
 									animatedImg.style.top = state.top + 'px';
 								}, this),
 								complete: BX.delegate(function() {
