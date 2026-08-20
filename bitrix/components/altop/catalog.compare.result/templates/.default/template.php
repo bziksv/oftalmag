@@ -52,13 +52,24 @@ if($request->isAjaxRequest()) {
 						<div class="compare-item-item">
 							<a class="compare-item-caption" href="<?=$arElement['DETAIL_PAGE_URL']?>">
 								<span class="compare-item-image">
-									<?if(is_array($arElement["OFFER_FIELDS"]["PREVIEW_PICTURE"])) {?>
-										<img src="<?=$arElement['OFFER_FIELDS']['PREVIEW_PICTURE']['SRC']?>" width="<?=$arElement['OFFER_FIELDS']['PREVIEW_PICTURE']['WIDTH']?>" height="<?=$arElement['OFFER_FIELDS']['PREVIEW_PICTURE']['HEIGHT']?>" alt="<?=$arElement['OFFER_FIELDS']['PREVIEW_PICTURE']['ALT']?>" title="<?=$arElement['OFFER_FIELDS']['PREVIEW_PICTURE']['TITLE']?>" />
-									<?} elseif(is_array($arElement["FIELDS"]["PREVIEW_PICTURE"])) {?>
-										<img src="<?=$arElement['FIELDS']['PREVIEW_PICTURE']['SRC']?>" width="<?=$arElement['FIELDS']['PREVIEW_PICTURE']['WIDTH']?>" height="<?=$arElement['FIELDS']['PREVIEW_PICTURE']['HEIGHT']?>" alt="<?=$arElement['FIELDS']['PREVIEW_PICTURE']['ALT']?>" title="<?=$arElement['FIELDS']['PREVIEW_PICTURE']['TITLE']?>" />
+									<?
+									$comparePicture = false;
+									if(is_array($arElement["OFFER_FIELDS"]["PREVIEW_PICTURE"]))
+										$comparePicture = $arElement["OFFER_FIELDS"]["PREVIEW_PICTURE"];
+									elseif(is_array($arElement["FIELDS"]["PREVIEW_PICTURE"]))
+										$comparePicture = $arElement["FIELDS"]["PREVIEW_PICTURE"];
+									elseif(is_array($arElement["OFFER_FIELDS"]["DETAIL_PICTURE"]))
+										$comparePicture = $arElement["OFFER_FIELDS"]["DETAIL_PICTURE"];
+									elseif(is_array($arElement["PREVIEW_PICTURE"]))
+										$comparePicture = $arElement["PREVIEW_PICTURE"];
+									elseif(is_array($arElement["DETAIL_PICTURE"]))
+										$comparePicture = $arElement["DETAIL_PICTURE"];
+									if(is_array($comparePicture) && !empty($comparePicture["SRC"])) {?>
+										<img src="<?=$comparePicture['SRC']?>" width="<?=$comparePicture['WIDTH']?>" height="<?=$comparePicture['HEIGHT']?>" alt="<?=$comparePicture['ALT']?>" title="<?=$comparePicture['TITLE']?>" />
 									<?} else {?>
-										<img src="<?=SITE_TEMPLATE_PATH?>/images/no_photo.png" width="50" height="50" alt="<?=$arElement['NAME']?>" title="<?=$arElement['NAME']?>" />
-									<?}?>
+										<img src="<?=SITE_TEMPLATE_PATH?>/images/no_photo.png" width="120" height="120" alt="<?=$arElement['NAME']?>" title="<?=$arElement['NAME']?>" />
+									<?}
+									unset($comparePicture);?>
 								</span>
 								<span class="compare-item-name"><?=(!empty($arElement["OFFER_FIELDS"]["NAME"]) ? $arElement["OFFER_FIELDS"]["NAME"] : (!empty($arElement["FIELDS"]["NAME"]) ? $arElement["FIELDS"]["NAME"] : $arElement["NAME"]))?></span>
 							</a>

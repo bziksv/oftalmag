@@ -691,7 +691,7 @@ class CEnext{
 			//IMG_WEBP//
 			$webpSupport = strpos($_SERVER["HTTP_ACCEPT"], "image/webp") !== false || strpos($_SERVER["HTTP_USER_AGENT"], " Chrome/") !== false ? true : false;
 			
-			$GLOBALS["IMG_LAZYLOAD"] = $arBackParametrs["IMG_LAZYLOAD"] == "Y";
+			$GLOBALS["IMG_LAZYLOAD"] = $arBackParametrs["IMG_LAZYLOAD"] == "Y" && !CSite::inDir(SITE_DIR."catalog/compare/");
 			$GLOBALS["IMG_WEBP"] = $arBackParametrs["IMG_WEBP"] == "Y" && function_exists("imagewebp") && $webpSupport && !CSite::inDir(SITE_DIR."personal/order/make/");
 			
 			if($GLOBALS["IMG_LAZYLOAD"] || $GLOBALS["IMG_WEBP"]) {

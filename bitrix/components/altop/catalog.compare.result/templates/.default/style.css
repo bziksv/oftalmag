@@ -258,15 +258,17 @@
 .compare-item-caption:link,
 .compare-item-caption:visited{
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	text-decoration: none;
 }
 
 /***IMAGE***/
 .compare-item-image{
-	width: 50px;
-	min-width: 50px;
-	height: 50px;
+	width: 120px;
+	min-width: 120px;
+	height: 120px;
+	margin-bottom: 10px;
 	align-self: flex-start;
 	display: flex;
 	flex-direction: column;
@@ -276,14 +278,14 @@
 
 .compare-item-image > img{
 	width: auto;
-	max-width: 50px;
+	max-width: 120px;
 	height: auto;
-	max-height: 50px;
+	max-height: 120px;
 }
 
 /***NAME***/
 .compare-item-name{	
-	margin-left: 12px;	
+	margin-left: 0;	
 	font-size: 14px;
 	color: #78909c;
 	line-height: 17px;

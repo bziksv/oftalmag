@@ -12,6 +12,8 @@ BX.Iblock.Catalog.CompareClass = (function() {
 	};
 
 	CompareClass.prototype.init = function() {
+		this.loadLazyImages(this.wrapObjId);
+
 		this.compareAdjusted = false;
 		this.adjustCompare();
 		BX.bind(window, 'resize', BX.proxy(this.adjustCompare, this));
@@ -51,6 +53,28 @@ BX.Iblock.Catalog.CompareClass = (function() {
 			for(var i in buyBtnAll) {
 				if(buyBtnAll.hasOwnProperty(i) && BX.type.isDomNode(buyBtnAll[i])) {
 					BX.bind(buyBtnAll[i], 'click', BX.proxy(this.add2Basket, this));
+				}
+			}
+		}
+	};
+
+	// enext ChangeContent снимает src → data-lazyload-src; в таблице сравнения
+	// картинки часто вне viewport / в overflow и без src не рисуются.
+	CompareClass.prototype.loadLazyImages = function(container) {
+		if(!container)
+			return;
+
+		var itemPics = container.querySelectorAll('img[data-lazyload-src]');
+		if(!itemPics)
+			return;
+
+		for(var i in itemPics) {
+			if(itemPics.hasOwnProperty(i) && BX.type.isDomNode(itemPics[i])) {
+				var dataSrc = itemPics[i].getAttribute('data-lazyload-src'),
+					currentSrc = itemPics[i].getAttribute('src');
+				if(!!dataSrc && (!currentSrc || currentSrc.indexOf('pixel.gif') !== -1)) {
+					itemPics[i].setAttribute('src', dataSrc);
+					BX.addClass(itemPics[i], 'bx-lazyload-success');
 				}
 			}
 		}
@@ -125,21 +149,7 @@ BX.Iblock.Catalog.CompareClass = (function() {
 						
 						var itemPics = newCompare.querySelectorAll('img[data-lazyload-src]');
 						if(!!itemPics) {
-							for(var i in itemPics) {
-								if(itemPics.hasOwnProperty(i)) {
-									if(!BX.hasClass(itemPics[i], 'bx-lazyload-success')) {
-										var dataSrc = itemPics[i].getAttribute('data-lazyload-src');
-										if(!!dataSrc) {
-											BX.adjust(itemPics[i], {
-												props: {
-													className: 'bx-lazyload-success',
-													src: dataSrc
-												}
-											});
-										}
-									}
-								}
-							}
+							this.loadLazyImages(newCompare);
 						}
 						
 						compareRight.appendChild(newCompare);
