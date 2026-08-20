@@ -1,5 +1,12 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/include/ArticleProperty.php";
+
+\Oftalmag\ArticleProperty::normalizeBasketGrid($arResult);
+if(!empty($arResult["JS_DATA"]) && is_array($arResult["JS_DATA"])) {
+	\Oftalmag\ArticleProperty::normalizeBasketGrid($arResult["JS_DATA"]);
+}
+
 $component = $this->__component;
 $component::scaleImages($arResult["JS_DATA"], $arParams["SERVICES_IMAGES_SCALING"]);
 

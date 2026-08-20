@@ -15,10 +15,12 @@ foreach($arResult["BASKET"] as $key => $arBasketItem) {
 	
 	$productIblockId = CIBlockElement::GetById($arBasketItem["PRODUCT_ID"])->GetNext();
 	
-	$obProductArticle = CIBlockElement::GetProperty($productIblockId["IBLOCK_ID"], $arBasketItem["PRODUCT_ID"], array(), array("CODE" => "ARTNUMBER"));
-	if($arProductArticle = $obProductArticle->Fetch())
-		$arResult["BASKET"][$key]["ARTNUMBER"] = $arProductArticle["VALUE"];
-	unset($arProductArticle, $obProductArticle, $productIblockId);
+	require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/include/ArticleProperty.php";
+	$arResult["BASKET"][$key]["ARTNUMBER"] = \Oftalmag\ArticleProperty::getElementArticle(
+		(int)$productIblockId["IBLOCK_ID"],
+		(int)$arBasketItem["PRODUCT_ID"]
+	);
+	unset($productIblockId);
 }
 unset($key, $arBasketItem);
 

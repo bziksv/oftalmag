@@ -934,9 +934,18 @@ class CEnext{
 	
 	public static function AddPresentToBasket($ID, $arFields) {
 		if(Bitrix\Main\Loader::includeModule("iblock")) {
-			$rsElement = CIBlockElement::GetList(array(), array("ID" => $arFields["PRODUCT_ID"]), false, false, array("ID", "IBLOCK_ID", "PROPERTY_ARTNUMBER"));
+			$rsElement = CIBlockElement::GetList(
+				array(),
+				array("ID" => $arFields["PRODUCT_ID"]),
+				false,
+				false,
+				array("ID", "IBLOCK_ID", "PROPERTY_ARTNUMBER", "PROPERTY_CML2_ARTICLE")
+			);
 			if($arElement = $rsElement->GetNext()) {
-				if(!empty($arElement["PROPERTY_ARTNUMBER_VALUE"])) {
+				$articleValue = !empty($arElement["PROPERTY_ARTNUMBER_VALUE"])
+					? $arElement["PROPERTY_ARTNUMBER_VALUE"]
+					: (!empty($arElement["PROPERTY_CML2_ARTICLE_VALUE"]) ? $arElement["PROPERTY_CML2_ARTICLE_VALUE"] : "");
+				if($articleValue !== "") {
 					$arFieldsAdd["PROPS"] = $arFields["PROPS"];
 					foreach($arFieldsAdd["PROPS"] as $key => $arProp) {
 						if(intval($arProp["SORT"]) > 0)
@@ -947,13 +956,13 @@ class CEnext{
 					$arFieldsAdd["PROPS"]["ARTNUMBER"] = array(
 						"NAME" => GetMessage("ENEXT_PROPERTY_ARTNUMBER"),
 						"CODE" => "ARTNUMBER",
-						"VALUE" => $arElement["PROPERTY_ARTNUMBER_VALUE"],
+						"VALUE" => $articleValue,
 						"SORT" => 1
 					);
-					CSaleBasket::Update($ID, $arFieldsAdd); 
+					CSaleBasket::Update($ID, $arFieldsAdd);
 				}
 			}
-			unset($arFieldsAdd, $arElement, $rsElement);
+			unset($arFieldsAdd, $arElement, $rsElement, $articleValue);
 		}
 	}
 	
