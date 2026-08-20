@@ -1,14 +1,18 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $CurPage = $APPLICATION->GetCurDir();
-$APPLICATION->SetTitle("catalog");
 $set404 = 'Y';
 $propCODE = '';
 
-
-//global $APPLICATION;
 $pageD = $APPLICATION->GetCurPage();
 $arPageD = explode('/',$pageD);
+
+// /product/ без слага — не страница, а роутер карточек; кидаем в каталог
+if(empty($arPageD[2])) {
+	LocalRedirect(SITE_DIR."catalog/", true, "301 Moved Permanently");
+}
+
+$APPLICATION->SetTitle("catalog");
 
 if($arPageD[2]){
 	$arSelect = Array("CODE","PROPERTY_code");
