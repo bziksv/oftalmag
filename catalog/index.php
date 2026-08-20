@@ -2054,7 +2054,8 @@ $APPLICATION->SetTitle("Каталог товаров");?>
 	false
 );?>
 <div style="clear:both"></div>
-<?$APPLICATION->IncludeComponent(
+<?if(!CSite::InDir(SITE_DIR."catalog/compare/")) {
+$APPLICATION->IncludeComponent(
 	"bitrix:news.list", 
 	"block_brands_catalog", 
 	array(
@@ -2125,6 +2126,7 @@ $APPLICATION->SetTitle("Каталог товаров");?>
 		"MESSAGE_404" => ""
 	),
 	false
-);?>
+);
+}?>
 
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
