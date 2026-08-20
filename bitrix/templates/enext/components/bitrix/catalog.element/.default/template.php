@@ -87,8 +87,10 @@ $alt = !empty($arResult["IPROPERTY_VALUES"]["ELEMENT_DETAIL_PICTURE_FILE_ALT"])
 
 $haveOffers = !empty($arResult["OFFERS"]);
 
-if($arSettings["AUTO_DELIVERY_CALCULATION"] == "Y" && (!$haveOffers || ($haveOffers && $arParams["OFFERS_VIEW"] != "LIST")))
+if($arSettings["AUTO_DELIVERY_CALCULATION"] == "Y" && (!$haveOffers || ($haveOffers && $arParams["OFFERS_VIEW"] != "LIST"))) {
 	$this->addExternalCss("/bitrix/components/altop/geo.delivery.enext/templates/slide_panel/style.min.css");
+	$this->addExternalCss(SITE_TEMPLATE_PATH."/components/bitrix/sale.location.selector.search/slide_panel/style.min.css");
+}
 
 if($arSettings["OFFERS_ON_MAP"] == "Y" && $haveOffers && $arParams["OFFERS_VIEW"] == "OBJECTS")
 	$this->addExternalCss("/bitrix/components/altop/map.yandex.view.enext/templates/.default/style.min.css");
