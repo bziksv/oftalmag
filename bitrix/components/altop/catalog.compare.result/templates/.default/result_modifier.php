@@ -2,6 +2,30 @@
 
 use Bitrix\Main\Localization\Loc;
 
+//PRODUCT_URL + ARTICLE//
+// Карточки каталога открываются по PROPERTY_code, а не по CODE элемента
+// (см. /product/index.php и catalog.item). Артикул — CML2_ARTICLE.
+foreach($arResult["ITEMS"] as &$item) {
+	if(!empty($item["DETAIL_PAGE_URL"])) {
+		$item["DETAIL_PAGE_URL"] = str_replace("catalog/product", "product", $item["DETAIL_PAGE_URL"]);
+	}
+	$seoCode = !empty($item["PROPERTIES"]["code"]["VALUE"]) ? $item["PROPERTIES"]["code"]["VALUE"] : "";
+	if($seoCode !== "") {
+		if(!empty($item["CODE"]) && $item["CODE"] !== $seoCode && !empty($item["DETAIL_PAGE_URL"])) {
+			$item["DETAIL_PAGE_URL"] = str_replace($item["CODE"], $seoCode, $item["DETAIL_PAGE_URL"]);
+		} elseif(empty($item["DETAIL_PAGE_URL"]) || strpos($item["DETAIL_PAGE_URL"], $seoCode) === false) {
+			$item["DETAIL_PAGE_URL"] = SITE_DIR."product/".$seoCode."/";
+		}
+	}
+	if(empty($item["PROPERTIES"]["ARTNUMBER"]["VALUE"]) && !empty($item["PROPERTIES"]["CML2_ARTICLE"]["VALUE"])) {
+		$item["PROPERTIES"]["ARTNUMBER"] = $item["PROPERTIES"]["CML2_ARTICLE"];
+	}
+	if(!empty($item["OFFER_PROPERTIES"]) && empty($item["OFFER_PROPERTIES"]["ARTNUMBER"]["VALUE"]) && !empty($item["OFFER_PROPERTIES"]["CML2_ARTICLE"]["VALUE"])) {
+		$item["OFFER_PROPERTIES"]["ARTNUMBER"] = $item["OFFER_PROPERTIES"]["CML2_ARTICLE"];
+	}
+}
+unset($item);
+
 //OBJECTS//
 foreach($arResult["ITEMS"] as $item) {
 	foreach($item["PROPERTIES"] as $prop) {

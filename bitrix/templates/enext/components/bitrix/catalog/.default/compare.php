@@ -11,18 +11,27 @@ $this->setFrameMode(true);?>
 	<div class="row">
 		<div class="col-xs-12">
 
+<?
+// Свойства сравнения: в catalog/index.php оставлены демо-коды enext (ARTNUMBER/PROP*),
+// реальные характеристики каталога — в DETAIL_PROPERTY_CODE (как на карточке товара).
+$comparePropertyCode = $arParams["COMPARE_PROPERTY_CODE"];
+if(!empty($arParams["DETAIL_PROPERTY_CODE"]) && is_array($arParams["DETAIL_PROPERTY_CODE"])) {
+	$comparePropertyCode = $arParams["DETAIL_PROPERTY_CODE"];
+}
+?>
 <?$APPLICATION->IncludeComponent("altop:catalog.compare.result", "",
 	array(
 		"NAME" => $arParams["COMPARE_NAME"],
 		"IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
 		"IBLOCK_ID" => $arParams["IBLOCK_ID"],
 		"FIELD_CODE" => $arParams["COMPARE_FIELD_CODE"],
-		"PROPERTY_CODE" => $arParams["COMPARE_PROPERTY_CODE"],
+		"PROPERTY_CODE" => $comparePropertyCode,
 		"OFFERS_FIELD_CODE" => $arParams["COMPARE_OFFERS_FIELD_CODE"],
 		"OFFERS_PROPERTY_CODE" => $arParams["COMPARE_OFFERS_PROPERTY_CODE"],
 		"ELEMENT_SORT_FIELD" => $arParams["COMPARE_ELEMENT_SORT_FIELD"],
 		"ELEMENT_SORT_ORDER" => $arParams["COMPARE_ELEMENT_SORT_ORDER"],
-		"DETAIL_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["element"],
+		// ЧПУ карточки: /product/{PROPERTY_code}/ (не /catalog/product/{CODE}/)
+		"DETAIL_URL" => SITE_DIR."product/#ELEMENT_CODE#/",
 		"BASKET_URL" => $arParams["BASKET_URL"],
 		"ACTION_VARIABLE" => (!empty($arParams["ACTION_VARIABLE"]) ? $arParams["ACTION_VARIABLE"] : "action")."_ccr",
 		"PRODUCT_ID_VARIABLE" => $arParams["PRODUCT_ID_VARIABLE"],
