@@ -110,4 +110,9 @@ function getCurrSection()
 	return null;
 }
 
+// Страница успеха заказа: не терять доступ после истечения PHP-сессии
+require_once __DIR__.'/include/OrderAccess.php';
+AddEventHandler('main', 'OnBeforeProlog', ['Oftalmag\\OrderAccess', 'onBeforeProlog']);
+AddEventHandler('sale', 'OnSaleComponentOrderOneStepComplete', ['Oftalmag\\OrderAccess', 'onOrderComplete']);
+
 
