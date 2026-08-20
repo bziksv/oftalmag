@@ -6574,6 +6574,11 @@
 		},
 
 		sPanelGeoDeliveryRequest: function(productId, customSiteId, onlyGeoDeliveryItems, sPanelContent) {
+			BX.loadCSS([
+				'/bitrix/components/altop/geo.delivery.enext/templates/slide_panel/style.min.css',
+				BX.message('SITE_TEMPLATE_PATH') + '/components/bitrix/sale.location.selector.search/slide_panel/style.min.css'
+			]);
+
 			BX.ajax({
 				url: '/bitrix/components/altop/geo.delivery.enext/ajax.php',
 				method: 'POST',
