@@ -13,7 +13,30 @@ if($request->isAjaxRequest()) {
 
 <div id="bx_catalog_compare_block" class="compare-container">
 	<?if($isAjax)
-		$APPLICATION->RestartBuffer();?>
+		$APPLICATION->RestartBuffer();
+	if(!empty($arResult["COMPARE_SECTIONS"])) {
+		$sectionCount = count($arResult["COMPARE_SECTIONS"]);
+		if($sectionCount > 1) {?>
+			<div class="compare-sections" data-entity="compare-sections">
+				<?foreach($arResult["COMPARE_SECTIONS"] as $arSection) {
+					$sectionUrl = $APPLICATION->GetCurPageParam(
+						"COMPARE_SECTION=".$arSection["ID"],
+						array("COMPARE_SECTION", "ajax_action", $arParams["ACTION_VARIABLE"], $arParams["PRODUCT_ID_VARIABLE"])
+					);
+					$isActive = ((int)$arSection["ID"] === (int)$arResult["COMPARE_SECTION_ID"]);?>
+					<a class="compare-sections-item<?=($isActive ? " active" : "")?>" href="<?=htmlspecialcharsbx($sectionUrl)?>">
+						<span class="compare-sections-name"><?=htmlspecialcharsbx($arSection["NAME"])?></span>
+						<span class="compare-sections-count"><?=(int)$arSection["COUNT"]?></span>
+					</a>
+				<?}
+				unset($arSection, $sectionUrl, $isActive);?>
+			</div>
+		<?} else {
+			$arSection = reset($arResult["COMPARE_SECTIONS"]);?>
+			<div class="compare-sections-title"><?=htmlspecialcharsbx($arSection["NAME"])?></div>
+		<?}
+		unset($sectionCount, $arSection);
+	}?>
 	<div class="compare-left scrollbar-inner">
 		<div class="compare">
 			<div class="compare-row compare-row-thead">

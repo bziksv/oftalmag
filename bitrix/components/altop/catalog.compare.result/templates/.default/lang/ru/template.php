@@ -1,5 +1,6 @@
 <?
 $MESS["CATALOG_ONLY_DIFFERENT"] = "Только различающиеся";
+$MESS["CATALOG_COMPARE_NO_SECTION"] = "Без категории";
 $MESS["CATALOG_DELETE"] = "Удалить";
 $MESS["IBLOCK_OFFER_FIELD_ID"] = "ID предложения";
 $MESS["IBLOCK_OFFER_FIELD_CODE"] = "Символьный код предложения";
