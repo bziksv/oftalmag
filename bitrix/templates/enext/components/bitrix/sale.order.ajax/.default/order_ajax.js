@@ -139,9 +139,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				this.setAnalyticsDataLayer('checkout');
 			}
 
-			if(this.params.USER_CONSENT === 'Y') {
-				this.initUserConsent();
-			}
 		},
 
 		//Send ajax request with order data and executes callback by action
@@ -1584,14 +1581,56 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					BX.addClass(locationStepInputs[i], 'form-control');
 		},
 
+		isUserConsentRequired: function() {
+			return this.params.USER_CONSENT === 'Y' || this.params.USER_CONSENT === true;
+		},
+
+		findConsentCheckbox: function() {
+			var form = BX('bx-soa-order-form');
+
+			if(form) {
+				var namedCheckbox = form.querySelector('[name="USER_CONSENT"]');
+				if(namedCheckbox)
+					return namedCheckbox;
+			}
+
+			if(!this.orderSaveBlockNode)
+				return null;
+
+			return this.orderSaveBlockNode.querySelector('.bx-soa-consent input[type="checkbox"]')
+				|| this.orderSaveBlockNode.querySelector('input[type="checkbox"]');
+		},
+
+		isUserConsentAccepted: function() {
+			if(!this.isUserConsentRequired())
+				return true;
+
+			var consentCheckbox = this.findConsentCheckbox();
+			if(!consentCheckbox)
+				return false;
+
+			return consentCheckbox.checked;
+		},
+
+		showUserConsentError: function() {
+			var consentCheckbox = this.findConsentCheckbox();
+
+			alert('Необходимо дать согласие на обработку персональных данных');
+
+			if(consentCheckbox) {
+				var consentBlock = BX.findParent(consentCheckbox, {className: 'bx-soa-consent'});
+				if(consentBlock)
+					BX.addClass(consentBlock, 'has-error');
+
+				consentCheckbox.focus();
+			}
+		},
+
 		//Order saving action with validation. Doesn't send request while have errors
 		clickOrderSaveAction: function(event) {
-			if(this.params.USER_CONSENT === 'Y') {
-				var consentCheckbox = this.orderSaveBlockNode.querySelector('[name="USER_CONSENT"]');
-				if(consentCheckbox && !consentCheckbox.checked) {
-					alert('Согласитесь с условиями обработки персональных данных');
-					return BX.PreventDefault(event);
-				}
+			if(!this.isUserConsentAccepted()) {
+				this.showUserConsentError();
+				return BX.PreventDefault(event);
 			}
 
 			if(this.isValidForm()) {
@@ -1603,6 +1642,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		},
 
 		doSaveAction: function() {
+			if(!this.isUserConsentAccepted()) {
+				this.showUserConsentError();
+				this.disallowOrderSave();
+				return;
+			}
+
 			if(this.isOrderSaveAllowed()) {
 				this.reachGoal('order');
 				this.sendRequest('saveOrderAjax');
@@ -7532,13 +7577,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		},
 
 		initUserConsent: function() {
-			BX.ready(BX.delegate(function() {
-				var control = BX.UserConsent && BX.UserConsent.load(this.orderBlockNode);
-				if(control) {
-					BX.addCustomEvent(control, BX.UserConsent.events.save, BX.proxy(this.doSaveAction, this));
-					BX.addCustomEvent(control, BX.UserConsent.events.refused, BX.proxy(this.disallowOrderSave, this));
-				}
-			}, this));
+			// Согласие проверяется в isUserConsentAccepted(); BX.UserConsent.save обходил clickOrderSaveAction.
 		}
 	};
 })();

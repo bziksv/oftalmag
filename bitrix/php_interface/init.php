@@ -115,6 +115,9 @@ require_once __DIR__.'/include/OrderAccess.php';
 AddEventHandler('main', 'OnBeforeProlog', ['Oftalmag\\OrderAccess', 'onBeforeProlog']);
 AddEventHandler('sale', 'OnSaleComponentOrderOneStepComplete', ['Oftalmag\\OrderAccess', 'onOrderComplete']);
 
+require_once __DIR__.'/include/OrderConsent.php';
+AddEventHandler('sale', 'OnSaleComponentOrderProperties', ['Oftalmag\\OrderConsent', 'onOrderProperties']);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/LegalRedirect.php';
 AddEventHandler('main', 'OnBeforeProlog', ['Oftalmag\\LegalRedirect', 'onBeforeProlog']);
 
