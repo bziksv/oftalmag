@@ -32,7 +32,8 @@ ssh "$HOST" "cd $PROD_PATH &&
     echo 'restored bitrix/license_key.php'
   fi
   chown -R ${PROD_USER}:${PROD_USER} .
-  rm -rf bitrix/cache/* bitrix/managed_cache/* bitrix/stack_cache/* 2>/dev/null || true
+  rm -rf bitrix/cache/* bitrix/managed_cache/* bitrix/stack_cache/* bitrix/html_pages/oftalmag.ru/* 2>/dev/null || true
+  echo 0 > bitrix/html_pages/.size 2>/dev/null || true
   git log -1 --oneline FETCH_HEAD
   echo cache_cleared
 "

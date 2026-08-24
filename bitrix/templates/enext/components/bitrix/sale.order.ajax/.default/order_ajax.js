@@ -1586,16 +1586,19 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		//Order saving action with validation. Doesn't send request while have errors
 		clickOrderSaveAction: function(event) {
-			if(this.isValidForm()) {
-				this.allowOrderSave();
-				
-				if(this.params.USER_CONSENT === 'Y' && BX.UserConsent) {
-					BX.onCustomEvent('bx-soa-order-save', []);
-				} else {
-					this.doSaveAction();
+			if(this.params.USER_CONSENT === 'Y') {
+				var consentCheckbox = this.orderSaveBlockNode.querySelector('[name="USER_CONSENT"]');
+				if(consentCheckbox && !consentCheckbox.checked) {
+					alert('Согласитесь с условиями обработки персональных данных');
+					return BX.PreventDefault(event);
 				}
 			}
-			
+
+			if(this.isValidForm()) {
+				this.allowOrderSave();
+				this.doSaveAction();
+			}
+
 			return BX.PreventDefault(event);
 		},
 

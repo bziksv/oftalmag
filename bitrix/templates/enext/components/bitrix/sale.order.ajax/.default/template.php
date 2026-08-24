@@ -245,7 +245,7 @@ switch(LANGUAGE_ID) {
 }
 
 $APPLICATION->SetAdditionalCSS($templateFolder.'/style.min.css', true);
-$this->addExternalJs($templateFolder.'/order_ajax.min.js');
+$this->addExternalJs($templateFolder.'/order_ajax.js');
 \Bitrix\Sale\PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder.'/script.min.js');?>
 
@@ -437,14 +437,19 @@ $this->addExternalJs($templateFolder.'/script.min.js');?>
 				<?}
 				//ORDER_SAVE_BLOCK//?>
 				<div id="bx-soa-orderSave" class="bx-soa-order-save">
-
-                    <div style="display: flex;">
-<label>
-  <input type="checkbox" required>
-    <span><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
-</label>
-</div>
-
+					<?if($arParams['USER_CONSENT'] === 'Y') {?>
+						<input type="hidden" name="USER_CONSENT_ID" value="<?= (int)$arParams['USER_CONSENT_ID'] ?>" />
+						<input type="hidden" name="USER_CONSENT_URL" value="" />
+						<div class="form-group form-group-checkbox bx-soa-consent">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="Y" name="USER_CONSENT"<?=($arParams['USER_CONSENT_IS_CHECKED'] === 'Y' ? ' checked' : '')?> />
+									<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
+									<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
+								</label>
+							</div>
+						</div>
+					<?}?>
 
 					<a href="javascript:void(0)" class="hidden-xs hidden-sm btn btn-buy pull-right" data-save-button="true" role="button"><span><?=$arParams['MESS_ORDER']?></span></a>
 				</div>
