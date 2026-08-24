@@ -3,9 +3,9 @@
 $config = \Bitrix\Main\Web\Json::encode($arResult['CONFIG']);?>
 
 <label data-bx-user-consent="<?=htmlspecialcharsbx($config)?>" class="main-user-consent-request">
-	<input type="checkbox" value="Y"<?=($arParams['IS_CHECKED'] ? ' checked' : '')?> name="<?=htmlspecialcharsbx($arParams['INPUT_NAME'])?>" />
+	<input type="checkbox" value="Y" name="<?=htmlspecialcharsbx($arParams['INPUT_NAME'])?>"<?=($arParams['IS_CHECKED'] ? ' checked' : '')?> />
 	<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
-	<a class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></a>
+	<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
 </label>
 
 <script type="text/html" data-bx-template="main-user-consent-request-loader">
@@ -123,7 +123,22 @@ $config = \Bitrix\Main\Web\Json::encode($arResult['CONFIG']);?>
 			}
 		},		
 		onClick: function(item, e) {
-			this.requestForItem(item);
+			var link = e.target && e.target.closest ? e.target.closest('.check-title a[href]') : null;
+			if (link) {
+				return;
+			}
+			if (e.target === item.inputNode || (e.target && e.target.closest && e.target.closest('input[type="checkbox"]'))) {
+				if(item.inputNode.checked) {
+					this.clearConsentError(item);
+				}
+				BX.onCustomEvent(item.formNode, 'OnFormInputUserConsentChange');
+				return;
+			}
+			item.inputNode.checked = !item.inputNode.checked;
+			if(item.inputNode.checked) {
+				this.clearConsentError(item);
+			}
+			BX.onCustomEvent(item.formNode, 'OnFormInputUserConsentChange');
 			e.preventDefault();
 		},
 		onSubmit: function(item, e) {
@@ -137,13 +152,57 @@ $config = \Bitrix\Main\Web\Json::encode($arResult['CONFIG']);?>
 				return false;
 			}
 		},
+		consentErrorMessage: 'Необходимо дать согласие на обработку персональных данных',
+		showConsentError: function(item) {
+			var row = item.controlNode.closest('.form-group') || item.controlNode.parentNode;
+			if(!row) {
+				return;
+			}
+
+			BX.addClass(row, 'has-error');
+			BX.addClass(item.controlNode, 'main-user-consent-request-error');
+
+			var msgNode = row.querySelector('.main-user-consent-request-error-msg');
+			if(!msgNode) {
+				msgNode = BX.create('DIV', {
+					props: {className: 'alert alert-error main-user-consent-request-error-msg'},
+					style: {marginTop: '8px', marginBottom: '0'},
+					html: this.consentErrorMessage
+				});
+				row.appendChild(msgNode);
+			} else {
+				msgNode.style.display = '';
+			}
+
+			if(typeof item.controlNode.scrollIntoView === 'function') {
+				item.controlNode.scrollIntoView({behavior: 'smooth', block: 'center'});
+			}
+		},
+		clearConsentError: function(item) {
+			if(!item || !item.controlNode) {
+				return;
+			}
+
+			var row = item.controlNode.closest('.form-group') || item.controlNode.parentNode;
+			if(row) {
+				BX.removeClass(row, 'has-error');
+				var msgNode = row.querySelector('.main-user-consent-request-error-msg');
+				if(msgNode) {
+					msgNode.style.display = 'none';
+				}
+			}
+
+			BX.removeClass(item.controlNode, 'main-user-consent-request-error');
+		},
 		check: function(item) {
 			if(item.inputNode.checked) {
+				this.clearConsentError(item);
 				this.saveConsent(item);
 				return true;
 			}
 
-			this.requestForItem(item);
+			this.showConsentError(item);
+			item.inputNode.focus();
 			return false;
 		},
 		requestForItem: function(item) {

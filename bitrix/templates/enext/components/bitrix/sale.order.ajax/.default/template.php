@@ -438,15 +438,22 @@ $this->addExternalJs($templateFolder.'/script.min.js');?>
 				//ORDER_SAVE_BLOCK//?>
 				<div id="bx-soa-orderSave" class="bx-soa-order-save">
 					<?if($arParams['USER_CONSENT'] === 'Y') {?>
-						<input type="hidden" name="USER_CONSENT_ID" value="<?= (int)$arParams['USER_CONSENT_ID'] ?>" />
-						<input type="hidden" name="USER_CONSENT_URL" value="" />
-						<div class="form-group form-group-checkbox bx-soa-consent">
+						<div class="form-group form-group-checkbox">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" value="Y" name="USER_CONSENT"<?=($arParams['USER_CONSENT_IS_CHECKED'] === 'Y' ? ' checked' : '')?> />
-									<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
-									<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
-								</label>
+								<?$APPLICATION->IncludeComponent('bitrix:main.userconsent.request', '',
+									array(
+										'ID' => $arParams['USER_CONSENT_ID'],
+										'INPUT_NAME' => 'USER_CONSENT',
+										'IS_CHECKED' => 'N',
+										'IS_LOADED' => $arParams['USER_CONSENT_IS_LOADED'],
+										'AUTO_SAVE' => 'N',
+										'SUBMIT_EVENT_NAME' => 'bx-soa-order-save',
+										'REPLACE' => array(
+											'button_caption' => $arParams['~MESS_ORDER'] ?? $arParams['MESS_ORDER'],
+											'fields' => $arResult['USER_CONSENT_PROPERTY_DATA']
+										)
+									)
+								);?>
 							</div>
 						</div>
 					<?}?>
