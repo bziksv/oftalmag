@@ -66,6 +66,8 @@ Thumbs.db
 # --- Прочее ---
 /access/
 /node_modules/
+scripts/node_modules/
+scripts/package-lock.json
 /vendor/
 *.sql
 *.sql.gz

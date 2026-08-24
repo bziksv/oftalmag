@@ -895,7 +895,13 @@ h2, .h2{
 }
 
 .feedback .form-group .checkbox .check-title{		
-	color: #78909c;
+	color: #b2c7cb;
+}
+
+.feedback .form-group .checkbox .check-title a:link,
+.feedback .form-group .checkbox .check-title a:visited{
+	color: #fff;
+	text-decoration: underline;
 }
 
 /***BOTTOM_MENU***/

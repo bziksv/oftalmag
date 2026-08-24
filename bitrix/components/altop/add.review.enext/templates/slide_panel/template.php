@@ -86,7 +86,7 @@ $containerName = "slide-panel-form-".$obName;?>
 <div>
 	<label style="color: #66797f; font-size: 14px; padding-left: 12px;">
   <input type="checkbox" required>
-				<span>Нажимая на эту кнопку, я даю свое согласие на обработку персональных данных и соглашаюсь с условиями <a target="_blank" href="/upload/politics-oftalmag.png">политики обработки персональных данных</a>.</span>
+				<span><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
 </label>
 				</div>
 

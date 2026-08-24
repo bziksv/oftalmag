@@ -38,27 +38,11 @@ $obName = "ob".preg_replace("/[^a-zA-Z0-9_]/", "x", $this->GetEditAreaId($this->
 				<input type="hidden" name="USER_CONSENT_URL" value="" />
 				<div class="form-group form-group-checkbox<?=($arResult['MODE'] == 'PRODUCT' ? ' form-group-hidden' : '')?>">
 					<div class="checkbox">
-						<?$fields = array();
-						foreach($arResult["FIELDS"] as $arField) {
-							if($arField["TYPE"] != "TEXTAREA")
-								$fields[] = $arField["NAME"];
-						}
-						unset($arField);?>
-						<?$APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
-							array(
-								"ID" => $arResult["USER_CONSENT_ID"],
-								"INPUT_NAME" => "USER_CONSENT",
-								"IS_CHECKED" => $arResult["USER_CONSENT_IS_CHECKED"],
-								"AUTO_SAVE" => "N",
-								"IS_LOADED" => $arResult["USER_CONSENT_IS_LOADED"],
-								"REPLACE" => array(
-									"button_caption" => Loc::getMessage("QUICK_ORDER_TEMPLATE_SUBMIT"),
-									"fields" => $fields
-								)
-							),
-							$component
-						);?>
-						<?unset($fields);?>
+						<label>
+							<input type="checkbox" value="Y" name="USER_CONSENT"<?=($arResult['USER_CONSENT_IS_CHECKED'] == 'Y' ? ' checked' : '')?> />
+							<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
+							<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
+						</label>
 					</div>
 				</div>
 			<?}

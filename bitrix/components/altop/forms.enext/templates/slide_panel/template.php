@@ -42,7 +42,7 @@ $containerName = "slide-panel-form-".$obName;?>
 					<label>
 						<input type="checkbox" value="Y" name="USER_CONSENT"<?=($arParams["USER_CONSENT_IS_CHECKED"] == "Y" ? ' checked' : '')?> />
 						<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
-						<span class="check-title">Нажимая на эту кнопку, я даю свое согласие на обработку персональных данных и соглашаюсь с условиями <a target="_blank" href="/upload/politics-oftalmag.png">политики обработки персональных данных</a>.</span>
+						<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
 					</label>
 				</div>
 			</div>

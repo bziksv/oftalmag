@@ -184,30 +184,11 @@ if($arResult["SHOW_SMS_FIELD"] == true)
 						if($arSettings["FORMS_USER_CONSENT"]["VALUE"] == "Y") {?>
 							<div class="form-group form-group-checkbox">
 								<div class="checkbox">
-									<?$APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
-										array(
-											"ID" => $arSettings["FORMS_USER_CONSENT_ID"]["VALUE"],
-											"IS_CHECKED" => $arSettings["FORMS_USER_CONSENT_IS_CHECKED"]["VALUE"],
-											"AUTO_SAVE" => "N",
-											"IS_LOADED" => $arSettings["FORMS_USER_CONSENT_IS_LOADED"]["VALUE"],
-											"ORIGINATOR_ID" => $arResult["AGREEMENT_ORIGINATOR_ID"],
-											"ORIGIN_ID" => $arResult["AGREEMENT_ORIGIN_ID"],
-											"INPUT_NAME" => $arResult["AGREEMENT_INPUT_NAME"],
-											"REPLACE" => array(
-												"button_caption" => Loc::getMessage("AUTH_REGISTER"),
-												"fields" => array(
-													Loc::getMessage("AUTH_NAME"),
-													Loc::getMessage("AUTH_LAST_NAME"),
-													Loc::getMessage("AUTH_LOGIN_MIN"),
-													Loc::getMessage("AUTH_PASSWORD_REQ"),
-													Loc::getMessage("AUTH_EMAIL")
-												)
-											)
-										)
-									);?>
-									<script type="text/javascript">
-										BX.UserConsent.load(document.bform);
-									</script>
+									<label class="main-user-consent-request">
+										<input type="checkbox" value="Y" name="<?=htmlspecialcharsbx($arResult['AGREEMENT_INPUT_NAME'])?>"<?=($arSettings['FORMS_USER_CONSENT_IS_CHECKED']['VALUE'] == 'Y' ? ' checked' : '')?> />
+										<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
+										<span class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></span>
+									</label>
 								</div>
 							</div>
 						<?}

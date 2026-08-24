@@ -5,7 +5,7 @@ $config = \Bitrix\Main\Web\Json::encode($arResult['CONFIG']);?>
 <label data-bx-user-consent="<?=htmlspecialcharsbx($config)?>" class="main-user-consent-request">
 	<input type="checkbox" value="Y"<?=($arParams['IS_CHECKED'] ? ' checked' : '')?> name="<?=htmlspecialcharsbx($arParams['INPUT_NAME'])?>" />
 	<span class="check-cont"><span class="check"><i class="icon-ok-b"></i></span></span>
-	<a class="check-title"><?=htmlspecialcharsbx($arResult['INPUT_LABEL'])?></a>
+	<a class="check-title"><?php include $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/form_consent_label.php'; ?></a>
 </label>
 
 <script type="text/html" data-bx-template="main-user-consent-request-loader">
