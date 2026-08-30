@@ -430,9 +430,12 @@ BX.Iblock.Catalog.CompareClass = (function() {
 		window.location.href = url.toString();
 	};
 	
-	CompareClass.prototype.deleteItem = function() {
-		var target = BX.proxy_context,
-			productId = target.getAttribute('data-id');
+	CompareClass.prototype.deleteItem = function(event) {
+		var target = (event && (event.currentTarget || event.target)) || BX.proxy_context;
+		if(target && target.getAttribute('data-entity') !== 'deleteItem') {
+			target = BX.findParent(target, {attribute: {'data-entity': 'deleteItem'}}, this.wrapObjId) || target;
+		}
+		var productId = target ? target.getAttribute('data-id') : null;
 
 		if(!!productId) {
 			var url = new URL(window.location.href),

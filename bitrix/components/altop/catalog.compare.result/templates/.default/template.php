@@ -271,11 +271,18 @@ if($request->isAjaxRequest()) {
 		die();?>
 </div>
 
+<?
+$compareReloadUrl = $arResult["COMPARE_URL_TEMPLATE"];
+if(!empty($arResult["COMPARE_SECTION_ID"]) && strpos($compareReloadUrl, "COMPARE_SECTION=") === false) {
+	$compareReloadUrl .= "COMPARE_SECTION=".(int)$arResult["COMPARE_SECTION_ID"]."&";
+}
+?>
+<script src="<?=$templateFolder?>/script.js?<?=filemtime($_SERVER['DOCUMENT_ROOT'].$templateFolder.'/script.js')?>"></script>
 <script type="text/javascript">
 	BX.message({
 		BASKET_URL: '<?=$arParams["BASKET_URL"]?>',
 		ADD_BASKET_MESSAGE: '<?=GetMessageJS("CATALOG_ADD_TO_BASKET")?>',
 		ADD_BASKET_OK_MESSAGE: '<?=GetMessageJS("CATALOG_ADD_TO_BASKET_OK")?>'
 	});
-	var CatalogCompareObj = new BX.Iblock.Catalog.CompareClass('bx_catalog_compare_block', '<?=CUtil::JSEscape($arParams["ACTION_VARIABLE"])?>', '<?=CUtil::JSEscape($arParams["PRODUCT_ID_VARIABLE"])?>', '<?=CUtil::JSEscape($arResult["IS_EXTERNAL"])?>', '<?=CUtil::JSEscape($arResult["COMPARE_URL_TEMPLATE"])?>');
+	var CatalogCompareObj = new BX.Iblock.Catalog.CompareClass('bx_catalog_compare_block', '<?=CUtil::JSEscape($arParams["ACTION_VARIABLE"])?>', '<?=CUtil::JSEscape($arParams["PRODUCT_ID_VARIABLE"])?>', '<?=CUtil::JSEscape($arResult["IS_EXTERNAL"])?>', '<?=CUtil::JSEscape($compareReloadUrl)?>');
 </script>
