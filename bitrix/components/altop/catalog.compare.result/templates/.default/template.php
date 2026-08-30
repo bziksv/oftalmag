@@ -37,6 +37,7 @@ if($request->isAjaxRequest()) {
 		<?}
 		unset($sectionCount, $arSection);
 	}?>
+	<div class="compare-body">
 	<div class="compare-left scrollbar-inner">
 		<div class="compare">
 			<div class="compare-row compare-row-thead">
@@ -256,6 +257,7 @@ if($request->isAjaxRequest()) {
 				unset($arElement);?>
 			</div>
 		</div>
+	</div>
 	</div>
 	<div class="visible-xs visible-sm compare-different-mobile">
 		<label class="compare-different">

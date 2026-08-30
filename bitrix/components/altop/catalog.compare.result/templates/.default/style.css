@@ -8,6 +8,11 @@
 	position: relative;
 }
 
+/* Keep absolute .compare-right aligned with .compare-left when section tabs are above */
+.compare-body{
+	position: relative;
+}
+
 .compare-sections{
 	display: flex;
 	flex-wrap: wrap;
