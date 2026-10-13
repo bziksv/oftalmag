@@ -49,6 +49,7 @@ Disallow: /?
 Disallow: /*?
 Disallow: /catalog/compare/
 Disallow: /news/
+Disallow: /places/
 Disallow: /product/rmk-200-avtorefkeratometr-avtomaticheskiy-bez-stolika-bez-poverki/
 Allow: /bitrix/components/
 Allow: /bitrix/cache/
