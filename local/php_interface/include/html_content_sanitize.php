@@ -42,6 +42,61 @@ if (!function_exists('oftalmagRemoveDuplicateProductHeading')) {
 	}
 }
 
+if (!function_exists('oftalmagNormalizeHeadingLevels')) {
+	/**
+	 * Avoid skipped heading levels under page H1 (H1→H3/H4, H2→H4).
+	 * 1) Compress used levels so the shallowest content heading maps to H2.
+	 * 2) Walk document order and clamp jumps larger than +1 from the previous heading.
+	 *
+	 * @param int $baseLevel Previous level before content (1 = page H1).
+	 */
+	function oftalmagNormalizeHeadingLevels($html, $baseLevel = 1)
+	{
+		if (!is_string($html) || $html === '' || !preg_match('/<h[1-6]\b/i', $html)) {
+			return $html;
+		}
+		$baseLevel = max(1, min(6, (int)$baseLevel));
+
+		preg_match_all('/<h([1-6])\b/i', $html, $found);
+		$used = array_values(array_unique(array_map('intval', $found[1] ?? [])));
+		sort($used, SORT_NUMERIC);
+		$map = [];
+		$next = 2;
+		foreach ($used as $level) {
+			if ($level < 2) {
+				$map[$level] = 2;
+				continue;
+			}
+			$map[$level] = min(6, $next);
+			$next++;
+		}
+		if ($map) {
+			$html = preg_replace_callback(
+				'/<h([1-6])(\b[^>]*)>([\s\S]*?)<\/h\1>/i',
+				static function ($m) use ($map) {
+					$level = $map[(int)$m[1]] ?? (int)$m[1];
+					return '<h'.$level.$m[2].'>'.$m[3].'</h'.$level.'>';
+				},
+				$html
+			);
+		}
+
+		$prev = $baseLevel;
+		return preg_replace_callback(
+			'/<h([1-6])(\b[^>]*)>([\s\S]*?)<\/h\1>/i',
+			static function ($m) use (&$prev) {
+				$level = (int)$m[1];
+				if ($level > $prev + 1) {
+					$level = $prev + 1;
+				}
+				$prev = $level;
+				return '<h'.$level.$m[2].'>'.$m[3].'</h'.$level.'>';
+			},
+			$html
+		);
+	}
+}
+
 if (!function_exists('oftalmagEscapeBareLt')) {
 	function oftalmagEscapeBareLt($value)
 	{
@@ -131,6 +186,9 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 
 		// Drop empty list placeholders left inside broken headings.
 		$html = preg_replace('/<ul\b[^>]*>\s*<\/ul>/i', '', $html);
+
+		// Contiguous heading outline under page H1.
+		$html = oftalmagNormalizeHeadingLevels($html, 1);
 
 		return oftalmagEscapeBareLt($html);
 	}

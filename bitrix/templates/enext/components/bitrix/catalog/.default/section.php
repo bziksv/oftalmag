@@ -150,6 +150,13 @@ if($obCache->InitCache($arParams["CACHE_TIME"], serialize($arFilter), "/iblock/c
 	$arCurSection = array();
 }
 
+if (!empty($arCurSection["DESCRIPTION"]) && is_string($arCurSection["DESCRIPTION"])) {
+	if (!function_exists('oftalmagSanitizeContentHtml')) {
+		require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+	}
+	$arCurSection["DESCRIPTION"] = oftalmagSanitizeContentHtml($arCurSection["DESCRIPTION"]);
+}
+
 //SECTION_FILTER//
 if(!$arCurSection["IS_FILTER"])
 	$isFilter = false;

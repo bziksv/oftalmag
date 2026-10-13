@@ -542,9 +542,16 @@ class CEnext{
 				unset($arFilter);
 
 				global $seoMeta;
+				if (!function_exists('oftalmagSanitizeContentHtml')) {
+					require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+				}
 				$seoMeta["IPROPERTY_VALUES"] = $arResult["IPROPERTY_VALUES"];
-				$seoMeta["PREVIEW"] = $arResult["PREVIEW_TEXT"];
-				$seoMeta["DESCRIPTION"] = $arResult["DETAIL_TEXT"];
+				$seoMeta["PREVIEW"] = is_string($arResult["PREVIEW_TEXT"])
+					? oftalmagSanitizeContentHtml($arResult["PREVIEW_TEXT"])
+					: $arResult["PREVIEW_TEXT"];
+				$seoMeta["DESCRIPTION"] = is_string($arResult["DETAIL_TEXT"])
+					? oftalmagSanitizeContentHtml($arResult["DETAIL_TEXT"])
+					: $arResult["DETAIL_TEXT"];
 				$seoMeta["FAQ"] = $arResult["FAQ"];
 				$seoMeta["CANONICAL_URL"] = $arResult["CANONICAL_URL"];
 				
