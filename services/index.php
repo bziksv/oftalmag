@@ -1,4 +1,6 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->SetPageProperty("description", "Услуги компании Oftalmag: поставка и сопровождение офтальмологического оборудования. +7-499-113-23-88.");
+$APPLICATION->SetPageProperty("title", "Услуги | Интернет-магазин медицинского оборудования Оftalmag");
 $APPLICATION->SetTitle("Современные услуги нашей компании");?>
 
 <?$APPLICATION->IncludeComponent("bitrix:news", "services", 

@@ -1,4 +1,5 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->SetPageProperty("title", "Соглашение на обработку персональных данных | Интернет-магазин медицинского оборудования Оftalmag");
 $APPLICATION->SetTitle("Соглашение на обработку персональных данных");
 
 use Bitrix\Main\Context;
