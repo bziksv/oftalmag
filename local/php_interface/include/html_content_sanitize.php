@@ -14,6 +14,34 @@ if (!function_exists('oftalmagIsValidProductCodeSlug')) {
 	}
 }
 
+if (!function_exists('oftalmagRemoveDuplicateProductHeading')) {
+	/**
+	 * Drop <h2>…</h2> that repeats the product name (H1 from page title / breadcrumb).
+	 */
+	function oftalmagRemoveDuplicateProductHeading($html, $productName)
+	{
+		if (!is_string($html) || $html === '' || !is_string($productName) || trim($productName) === '') {
+			return $html;
+		}
+		$normalize = static function ($s) {
+			$s = html_entity_decode(strip_tags((string)$s), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			$s = preg_replace('/\s+/u', ' ', trim($s));
+			return function_exists('mb_strtolower') ? mb_strtolower($s, 'UTF-8') : strtolower($s);
+		};
+		$target = $normalize($productName);
+		if ($target === '') {
+			return $html;
+		}
+		return preg_replace_callback(
+			'/<h2\b[^>]*>([\s\S]*?)<\/h2>/iu',
+			static function ($m) use ($normalize, $target) {
+				return $normalize($m[1]) === $target ? '' : $m[0];
+			},
+			$html
+		);
+	}
+}
+
 if (!function_exists('oftalmagEscapeBareLt')) {
 	function oftalmagEscapeBareLt($value)
 	{

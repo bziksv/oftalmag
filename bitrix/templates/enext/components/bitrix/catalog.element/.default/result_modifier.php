@@ -1373,9 +1373,11 @@ if (!empty($arResult["DISPLAY_PROPERTIES"]) && is_array($arResult["DISPLAY_PROPE
 }
 if (!empty($arResult["DETAIL_TEXT"]) && is_string($arResult["DETAIL_TEXT"])) {
 	$arResult["DETAIL_TEXT"] = oftalmagSanitizeContentHtml($arResult["DETAIL_TEXT"]);
+	$arResult["DETAIL_TEXT"] = oftalmagRemoveDuplicateProductHeading($arResult["DETAIL_TEXT"], (string)$arResult["NAME"]);
 }
 if (!empty($arResult["PREVIEW_TEXT"]) && is_string($arResult["PREVIEW_TEXT"])) {
 	$arResult["PREVIEW_TEXT"] = oftalmagSanitizeContentHtml($arResult["PREVIEW_TEXT"]);
+	$arResult["PREVIEW_TEXT"] = oftalmagRemoveDuplicateProductHeading($arResult["PREVIEW_TEXT"], (string)$arResult["NAME"]);
 }
 if (!empty($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"]) && is_array($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"])) {
 	$arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"] = oftalmagEscapeBareLt($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"]);
