@@ -56,7 +56,7 @@ $containerName = "container-".$navParams["NavNum"];?>
 				<a class="brands-item" href="<?=$arItem['DETAIL_PAGE_URL']?>" title="<?=$arItem['NAME']?>">
 					<span class="brands-item-image">
 						<?if(is_array($arItem["PREVIEW_PICTURE"])) {?>									
-							<img src="/bitrix/images/arturgolubev.lazyload/pixel.gif" data-lazyload-src="<?=!empty($arItem['PREVIEW_PICTURE']['SRC']) ? $arItem['PREVIEW_PICTURE']['SRC'] : SITE_TEMPLATE_PATH.'/images/no_photo.png'?>" width="<?=!empty($arItem['PREVIEW_PICTURE']['WIDTH']) ? $arItem['PREVIEW_PICTURE']['WIDTH'] : 56?>" height="<?=!empty($arItem['PREVIEW_PICTURE']['HEIGHT']) ? $arItem['PREVIEW_PICTURE']['HEIGHT'] : 56?>" alt="<?=$arItem['NAME']?>" />									
+							<img src="<?=!empty($arItem['PREVIEW_PICTURE']['SRC']) ? $arItem['PREVIEW_PICTURE']['SRC'] : SITE_TEMPLATE_PATH.'/images/no_photo.png'?>" width="<?=!empty($arItem['PREVIEW_PICTURE']['WIDTH']) ? $arItem['PREVIEW_PICTURE']['WIDTH'] : 56?>" height="<?=!empty($arItem['PREVIEW_PICTURE']['HEIGHT']) ? $arItem['PREVIEW_PICTURE']['HEIGHT'] : 56?>" alt="<?=$arItem['NAME']?>" />
 						<?}?>
 					</span>
 					<?if(!empty($arItem["MARKER"])) {?>

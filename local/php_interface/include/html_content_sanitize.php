@@ -139,14 +139,25 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)\s+[^>]*>/', '</$1>', $html);
 		$html = preg_replace('/(?<=[>\s])\/(ul|ol|li)>/i', '</$1>', $html);
 
+		// Typo: </li><ul> instead of </li></ul> (empty/trailing nested open).
+		$html = preg_replace('/<\/li>\s*<ul\b[^>]*>\s*(<\/(?:div|td|p|section|article)|$)/i', '</li></ul>$1', $html);
+		$html = preg_replace('/<\/li>\s*<ul\b[^>]*>\s*<\/ul>/i', '</li>', $html);
+
+		// <ol>…<ul>…</ul>…</ol> → drop redundant inner <ul> wrapper.
+		$html = preg_replace('/(<ol\b[^>]*>)\s*<ul\b[^>]*>/i', '$1', $html);
+		$html = preg_replace('/<\/ul>\s*(<\/ol>)/i', '$1', $html);
+
 		// </p></ul><li> → </p><ul><li>
 		$html = preg_replace('/<\/p>\s*<\/ul>\s*(<li\b)/i', '</p><ul>$1', $html);
 
 		// Leading text without <p>…</p> (stray </p> / bare paragraph).
 		if (preg_match('/^(\s*)([^<\s][\s\S]*?)<\/p>/u', $html, $m) && strpos($m[2], '<') === false) {
 			$html = $m[1].'<p>'.$m[2].'</p>'.substr($html, strlen($m[0]));
-		} elseif (preg_match('/^(\s*)([^<]+?)(?=\s*<h[1-6]|\s*<ul|\s*<ol|\s*<div|\s*<p|$)/u', $html, $m)) {
-			$html = $m[1].'<p>'.trim($m[2]).'</p>'.substr($html, strlen($m[0]));
+		} elseif (preg_match('/^(\s*)([^<\s][^<]*?)(?=\s*<h[1-6]|\s*<ul|\s*<ol|\s*<div|\s*<p|$)/u', $html, $m)) {
+			$lead = trim($m[2]);
+			if ($lead !== '') {
+				$html = $m[1].'<p>'.$lead.'</p>'.substr($html, strlen($m[0]));
+			}
 		}
 
 		// Leading stray closers / trailing stray </span>
@@ -162,13 +173,24 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*([^<]+)<\/li>/iu', '<li>$1</li>', $html);
 		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*/i', '', $html);
 
+		// Orphan <li>…</li> (property values inside <div>) → wrap in <ul>
+		if (preg_match('/<li\b/i', $html) && !preg_match('/<(ul|ol)\b/i', $html)) {
+			$html = '<ul>'.$html.'</ul>';
+		} else {
+			// Leading orphan lis before any ul/ol
+			$html = preg_replace(
+				'/^(\s*)((?:<li\b[\s\S]*?<\/li>\s*)+)(?=<|$)/iu',
+				'$1<ul>$2</ul>',
+				$html
+			);
+		}
+
 		// <hN><p>title</p>…blocks…</hN> → <hN>title</hN>…blocks…
 		$html = preg_replace_callback(
 			'/<h([1-6])\b([^>]*)>([\s\S]*?)<\/h\1>/i',
 			static function ($m) {
 				$inner = $m[3];
 				if (!preg_match('/<(ul|ol|div|table)\b/i', $inner) && substr_count(strtolower($inner), '<p') <= 1) {
-					// Simple <hN><p>…</p></hN>
 					if (preg_match('/^\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*$/i', $inner, $im)) {
 						return '<h'.$m[1].$m[2].'>'.trim($im[1]).'</h'.$m[1].'>';
 					}
