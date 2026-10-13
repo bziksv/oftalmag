@@ -27,20 +27,23 @@ if($arPageD[2]){
 
 
 	// Старые/sitemap URL вида /product/{CODE}/ → канонический /product/{PROPERTY_code}/
+	// Не редиректим на битый PROPERTY_code (пробелы/кириллица/«Генерация кода…»).
 	if($set404 === 'Y') {
+		if (!function_exists('oftalmagIsValidProductCodeSlug')) {
+			require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+		}
 		$arSelect = Array("CODE","PROPERTY_code");
 		$arFilter = Array("IBLOCK_ID"=>26, "ACTIVE_DATE"=>"Y", "ACTIVE"=>"Y","CODE"=>$arPageD[2]);
 		$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>1), $arSelect);
 		if($ob = $res->GetNextElement()){
 			$arFields = $ob->GetFields();
-			$seoCode = (string)$arFields["PROPERTY_CODE_VALUE"];
-			if($seoCode !== '' && $seoCode !== $arFields["CODE"]){
+			$seoCode = trim((string)$arFields["PROPERTY_CODE_VALUE"]);
+			$bitrixCode = trim((string)$arFields["CODE"]);
+			if($seoCode !== '' && $seoCode !== $bitrixCode && oftalmagIsValidProductCodeSlug($seoCode)){
 				LocalRedirect(SITE_DIR."product/".$seoCode."/", true, "301 Moved Permanently");
 			}
-			if($seoCode === '' || $seoCode === $arFields["CODE"]){
-				$propCODE = $arFields["CODE"];
-				$set404 = 'N';
-			}
+			$propCODE = $bitrixCode;
+			$set404 = 'N';
 		}
 	}
 

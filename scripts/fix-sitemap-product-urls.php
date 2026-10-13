@@ -1,6 +1,6 @@
 <?php
 /**
- * CLI: переписать URL товаров в sitemap-*iblock*26*.xml на PROPERTY_code.
+ * CLI: переписать URL товаров в sitemap-*iblock*26*.xml на валидный PROPERTY_code/CODE.
  * Работает без bitrix prolog (достаточно .local/db.env).
  *
  * Usage: php scripts/fix-sitemap-product-urls.php
@@ -47,6 +47,8 @@ if ($propId <= 0) {
 	exit(1);
 }
 
+require_once $root . '/bitrix/php_interface/include/SitemapProductUrls.php';
+
 $map = [];
 $sql = "
 	SELECT e.CODE, IFNULL(ep.VALUE, '')
@@ -58,13 +60,25 @@ $sql = "
 $res = $mysqli->query($sql);
 while ($row = $res->fetch_row()) {
 	$code = trim((string)$row[0]);
+	$seo = trim((string)$row[1]);
+	$preferred = Oftalmag\SitemapProductUrls::preferredSlug($code, $seo);
+	if ($preferred === '') {
+		continue;
+	}
 	if ($code !== '') {
-		$map[$code] = trim((string)$row[1]);
+		$map[$code] = $preferred;
+	}
+	if ($seo !== '') {
+		$map[$seo] = $preferred;
+	}
+	if ($seo !== '' && !Oftalmag\SitemapProductUrls::isValidSlug($seo)) {
+		$stripped = trim(preg_replace('/\s*Генерация кода из названия\s*/ui', '', $seo));
+		if ($stripped !== '' && $stripped !== $seo) {
+			$map[$stripped] = $preferred;
+		}
 	}
 }
 $mysqli->close();
-
-require_once $root . '/bitrix/php_interface/include/SitemapProductUrls.php';
 
 $stats = ['files' => 0, 'replaced' => 0, 'removed' => 0, 'map' => count($map)];
 $files = array_unique(array_merge(

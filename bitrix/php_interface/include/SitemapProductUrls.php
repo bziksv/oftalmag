@@ -30,6 +30,28 @@ class SitemapProductUrls
 		return new EventResult();
 	}
 
+	public static function isValidSlug(string $slug): bool
+	{
+		$slug = trim($slug);
+		return $slug !== '' && (bool)preg_match('/^[a-zA-Z0-9][a-zA-Z0-9_\-]*$/', $slug);
+	}
+
+	/**
+	 * Предпочтительный SEO-slug: валидный PROPERTY_code, иначе CODE.
+	 */
+	public static function preferredSlug(string $code, string $propertyCode): string
+	{
+		$propertyCode = trim($propertyCode);
+		$code = trim($code);
+		if (self::isValidSlug($propertyCode)) {
+			return $propertyCode;
+		}
+		if (self::isValidSlug($code)) {
+			return $code;
+		}
+		return '';
+	}
+
 	/**
 	 * Переписать XML-файлы sitemap каталога в корне сайта.
 	 *
@@ -40,13 +62,12 @@ class SitemapProductUrls
 		$documentRoot = rtrim($documentRoot ?? (string)Application::getDocumentRoot(), '/');
 		$stats = ['files' => 0, 'replaced' => 0, 'removed' => 0];
 
-		$map = self::buildCodeToSeoMap();
+		$map = self::buildSlugRewriteMap();
 		if ($map === []) {
 			return $stats;
 		}
 
 		$files = glob($documentRoot . '/sitemap*iblock*' . self::CATALOG_IBLOCK_ID . '*.xml') ?: [];
-		// На случай нестандартного имени из настроек SEO
 		$extra = $documentRoot . '/sitemap-iblock-' . self::CATALOG_IBLOCK_ID . '.xml';
 		if (is_file($extra) && !in_array($extra, $files, true)) {
 			$files[] = $extra;
@@ -69,9 +90,9 @@ class SitemapProductUrls
 	}
 
 	/**
-	 * @return array<string, string> CODE => PROPERTY_code
+	 * @return array<string, string> any known slug (CODE or PROPERTY, even broken) => preferred slug
 	 */
-	public static function buildCodeToSeoMap(): array
+	public static function buildSlugRewriteMap(): array
 	{
 		if (!Loader::includeModule('iblock')) {
 			return [];
@@ -87,25 +108,45 @@ class SitemapProductUrls
 			],
 			false,
 			false,
-			['ID', 'CODE', 'PROPERTY_' . self::PROPERTY_CODE]
+			['ID', 'CODE', 'NAME', 'PROPERTY_' . self::PROPERTY_CODE]
 		);
 
 		while ($row = $res->Fetch()) {
 			$code = trim((string)($row['CODE'] ?? ''));
-			if ($code === '') {
+			$seo = trim((string)($row['PROPERTY_CODE_VALUE'] ?? ''));
+			$preferred = self::preferredSlug($code, $seo);
+			if ($preferred === '') {
 				continue;
 			}
-
-			// GetList + PROPERTY_code → PROPERTY_CODE_VALUE
-			$seo = trim((string)($row['PROPERTY_CODE_VALUE'] ?? ''));
-			$map[$code] = $seo;
+			if ($code !== '') {
+				$map[$code] = $preferred;
+			}
+			if ($seo !== '') {
+				$map[$seo] = $preferred;
+			}
+			// Частый мусор Bitrix «Генерация кода из названия» в конце slug
+			if ($seo !== '' && !self::isValidSlug($seo)) {
+				$stripped = trim(preg_replace('/\s*Генерация кода из названия\s*/ui', '', $seo));
+				if ($stripped !== '' && $stripped !== $seo) {
+					$map[$stripped] = $preferred;
+				}
+			}
 		}
 
 		return $map;
 	}
 
 	/**
-	 * @param array<string, string> $map
+	 * @deprecated use buildSlugRewriteMap
+	 * @return array<string, string> CODE => PROPERTY_code
+	 */
+	public static function buildCodeToSeoMap(): array
+	{
+		return self::buildSlugRewriteMap();
+	}
+
+	/**
+	 * @param array<string, string> $map slug => preferred
 	 * @return array{changed:bool,replaced:int,removed:int}
 	 */
 	public static function rewriteFile(string $file, array $map): array
@@ -121,32 +162,57 @@ class SitemapProductUrls
 		}
 
 		$original = $xml;
+		$validTargets = array_fill_keys(array_values($map), true);
 
 		// <url>…<loc>https://host/product/SLUG/</loc>…</url>
 		$xml = preg_replace_callback(
 			'#<url>\s*<loc>(https?://[^<]+/product/([^/<]+)/?)</loc>(.*?)</url>#si',
-			static function (array $m) use ($map, &$result) {
+			static function (array $m) use ($map, $validTargets, &$result) {
 				$fullUrl = $m[1];
-				$slug = rawurldecode($m[2]);
+				$slugRaw = $m[2];
+				$slug = rawurldecode($slugRaw);
 				$tail = $m[3];
 
-				if (!array_key_exists($slug, $map)) {
+				$preferred = null;
+				if (array_key_exists($slug, $map)) {
+					$preferred = $map[$slug];
+				} elseif (!self::isValidSlug($slug)) {
+					$stripped = trim(preg_replace('/\s*Генерация кода из названия\s*/ui', '', $slug));
+					if ($stripped !== '' && array_key_exists($stripped, $map)) {
+						$preferred = $map[$stripped];
+					} else {
+						// модель вида cab-4000 в битом slug
+						if (preg_match_all('/[a-z]{2,}\-\d+/i', $slug, $mm)) {
+							foreach ($mm[0] as $token) {
+								$token = strtolower($token);
+								foreach ($map as $from => $to) {
+									if (stripos($from, $token) !== false || stripos($to, $token) !== false) {
+										$preferred = $to;
+										break 2;
+									}
+								}
+							}
+						}
+					}
+				} elseif (isset($validTargets[$slug])) {
 					return $m[0];
 				}
 
-				$seo = $map[$slug];
-				if ($seo === '') {
-					$result['removed']++;
-					return '';
+				if ($preferred === null || $preferred === '') {
+					if (!self::isValidSlug($slug)) {
+						$result['removed']++;
+						return '';
+					}
+					return $m[0];
 				}
 
-				if ($seo === $slug) {
+				if ($preferred === $slug) {
 					return $m[0];
 				}
 
 				$newUrl = preg_replace(
-					'#/product/' . preg_quote($m[2], '#') . '/?#',
-					'/product/' . rawurlencode($seo) . '/',
+					'#/product/' . preg_quote($slugRaw, '#') . '/?#',
+					'/product/' . rawurlencode($preferred) . '/',
 					$fullUrl,
 					1
 				);
@@ -161,7 +227,6 @@ class SitemapProductUrls
 			return $result;
 		}
 
-		// Убрать пустые строки после удаления url-блоков
 		$xml = preg_replace("/\n{3,}/", "\n\n", $xml);
 
 		if ($xml !== $original) {

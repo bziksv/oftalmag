@@ -6,8 +6,15 @@ use Bitrix\Main\Context;
 use Bitrix\Main\UserConsent\Agreement;
 
 $id = Context::getCurrent()->getRequest()->get("id");
-$agreementText = "";
+// /agreement/ в sitemap и прямые заходы без ?id= — показываем активное согласие по умолчанию
+if (!$id) {
+	$list = Agreement::getActiveList();
+	if (!empty($list)) {
+		$id = (string)array_key_first($list);
+	}
+}
 
+$agreementText = "";
 if ($id) {
 	$agreement = new Agreement($id);
 	if ($agreement->isExist() && $agreement->isActive()) {
@@ -19,8 +26,8 @@ if ($id) {
 if ($agreementText !== "") {
 	?><p><?=nl2br(htmlspecialcharsbx($agreementText))?></p><?
 } else {
-	CHTTP::SetStatus("404 Not Found");
-	?><p>Соглашение не найдено.</p><?
+	// Канонический документ согласия (PNG), если текст в UserConsent недоступен
+	LocalRedirect("/upload/consent-oftalmag.png", true, "301 Moved Permanently");
 }
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
