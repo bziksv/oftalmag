@@ -17,11 +17,12 @@ $page = $APPLICATION->GetCurPage();
 		<link rel="preload" href="<?=SITE_TEMPLATE_PATH?>/fonts/MuseoSansCyrl-500.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="<?=SITE_TEMPLATE_PATH?>/fonts/MuseoSansCyrl-700.woff2" as="font" type="font/woff2" crossorigin />
 		<title><?$APPLICATION->ShowTitle()?></title>
-		<?$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/colors.min.css", true);		
+		<?		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/colors.min.css", true);		
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/css/animation.min.css");
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/css/csshake-default.min.css");
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/js/scrollbar/jquery.scrollbar.min.css");
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/css/bootstrap.min.css");
+		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/css/footer-partner-spoiler.css");
 		CJSCore::Init(array("jquery2", "enextIntlTelInput"));
 		$APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/js/bootstrap.min.js");
 		$APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/js/formValidation.min.js");

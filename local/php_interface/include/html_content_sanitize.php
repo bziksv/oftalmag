@@ -133,12 +133,21 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 			$html = $decoded;
 		}
 
-		// Typos: </li<</ul>, </li<<, end tags with attributes.
-		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)<+/', '</$1>', $html);
+		// Typos: </li<</ul> / </li<</ul> → </li></ul>
+		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)<(?=<\/)/', '</$1>', $html);
+		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)<+\//', '</$1></', $html);
 		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)\s+[^>]*>/', '</$1>', $html);
+		$html = preg_replace('/(?<=[>\s])\/(ul|ol|li)>/i', '</$1>', $html);
 
 		// </p></ul><li> → </p><ul><li>
 		$html = preg_replace('/<\/p>\s*<\/ul>\s*(<li\b)/i', '</p><ul>$1', $html);
+
+		// Leading text without <p>…</p> (stray </p> / bare paragraph).
+		if (preg_match('/^(\s*)([^<\s][\s\S]*?)<\/p>/u', $html, $m) && strpos($m[2], '<') === false) {
+			$html = $m[1].'<p>'.$m[2].'</p>'.substr($html, strlen($m[0]));
+		} elseif (preg_match('/^(\s*)([^<]+?)(?=\s*<h[1-6]|\s*<ul|\s*<ol|\s*<div|\s*<p|$)/u', $html, $m)) {
+			$html = $m[1].'<p>'.trim($m[2]).'</p>'.substr($html, strlen($m[0]));
+		}
 
 		// Leading stray closers / trailing stray </span>
 		$html = preg_replace('/^\s*<\/(p|span|div|li|ul|ol)>/i', '', $html);

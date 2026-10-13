@@ -128,4 +128,29 @@ $eventManager->addEventHandler(
 	['Oftalmag\\SitemapProductUrls', 'onSitemapAfterUpdate']
 );
 
+// cssinliner/lazyload may leave <img data-lazyload-src> without src — restore placeholder.
+AddEventHandler('main', 'OnEndBufferContent', static function (&$content) {
+	if (!is_string($content) || $content === '' || strpos($content, 'data-lazyload-src') === false) {
+		return;
+	}
+	$pixel = '/bitrix/images/arturgolubev.lazyload/pixel.gif';
+	$content = preg_replace_callback(
+		'/<img\b[^>]*>/i',
+		static function ($m) use ($pixel) {
+			$tag = $m[0];
+			if (!preg_match('/\bdata-lazyload-src\s*=/i', $tag)) {
+				return $tag;
+			}
+			if (preg_match('/\bsrc\s*=\s*([\'"])(.*?)\1/i', $tag, $sm)) {
+				if (trim($sm[2]) !== '') {
+					return $tag;
+				}
+				return preg_replace('/\bsrc\s*=\s*([\'"])(.*?)\1/i', 'src="'.$pixel.'"', $tag, 1);
+			}
+			return preg_replace('/^<img\b/i', '<img src="'.$pixel.'"', $tag, 1);
+		},
+		$content
+	);
+});
+
 

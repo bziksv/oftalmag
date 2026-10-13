@@ -8,30 +8,22 @@ $isSiteClosed = false;
 if(COption::GetOptionString("main", "site_stopped") == "Y" && !$USER->CanDoOperation("edit_other_settings"))
 	$isSiteClosed = true;
 
-$obName = 'ob'.preg_replace('/[^a-zA-Z0-9_]/', 'x', $this->GetEditAreaId($this->randString()));
-$containerName = 'catalog-menu-'.$obName;
-
-if(!$isSiteClosed && !empty($arResult)) {?>
-	<?/*<script type="text/javascript">
-		BX.message({
-			MAIN_MENU: '<?=GetMessageJS("BM_MAIN_MENU")?>',
-			CATALOG_FULL: '<?=GetMessageJS("BM_CATALOG_FULL")?>'
-		});
-		var <?=$obName?> = new JCCatalogMenu({
-			container: '<?=$containerName?>'
-		});
-	</script>*/?>	
-	<style>
-		<?
-		foreach($arResult as $arItem):
-			if(!$arItem["SHOW"] || ($arItem["DEPTH_LEVEL"]>1 && $arItem["PARAMS"]["HIDE_MENU_INDEX"] && $arItem["PARAMS"]["URL"]=='product') ): 
-				$arCode = explode('/',$arItem["LINK"]);
-				?>
-				.show_<?=$arCode[2]?>:before{
-					content:'<?=$arItem["TEXT"]?>';
-				}
-			<? endif;
-		endforeach; ?>
-	</style>
-
-<?}?>
+if(!$isSiteClosed && !empty($arResult)) {
+	$css = '';
+	foreach($arResult as $arItem) {
+		if(!$arItem["SHOW"] || ($arItem["DEPTH_LEVEL"]>1 && $arItem["PARAMS"]["HIDE_MENU_INDEX"] && $arItem["PARAMS"]["URL"]=='product')) {
+			$arCode = explode('/',$arItem["LINK"]);
+			if(empty($arCode[2])) {
+				continue;
+			}
+			$css .= '.show_'.preg_replace('/[^a-zA-Z0-9_-]/', '', $arCode[2]).':before{content:'.json_encode((string)$arItem["TEXT"], JSON_UNESCAPED_UNICODE).';}';
+		}
+	}
+	if($css !== '') {
+		\Bitrix\Main\Page\Asset::getInstance()->addString(
+			'<style type="text/css">'.$css.'</style>',
+			true,
+			\Bitrix\Main\Page\AssetLocation::AFTER_CSS
+		);
+	}
+}
