@@ -257,12 +257,10 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
  на оборудование - 5 000₽<br>
  на инструментарий и расходные материалы - 10 000₽</h2>
 <div style="border-radius: 10px 10px 10px 10px; border: solid #663ab4 2px; box-shadow: 2px 2px 2px grey">
-	<div style="display: flex; justify-content: space-around; flex-wrap: no-wrap;">
+	<div style="display: flex; justify-content: space-around; flex-wrap: nowrap;">
 		<div style="padding: 30px 30px 30px 30px; width: 75%;">
 			<p style="font-size: 22px;">
 				 Для юридических лиц
-			</p>
-			<p>
 			</p>
 			<p style="font-size: 18px;">
  <strong>Безналичный расчет</strong>
@@ -270,13 +268,9 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
 			<ul style="list-style-type: none; padding-left: 0px">
 				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem;">
 				После оформления заказа наш менеджер проверит наличие товара на сайте, актуальную цену и сроки поставки, а затем пришлет вам счет для оплаты или КП.</li>
-				<p>
-				</p>
-				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1,5">
+				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1.5">
 				Оплата осуществляется в любом банке. Инструкция по оплате прилагается.</li>
-				<p>
-				</p>
-				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1,5"> <strong>Мы работаем только по 100% предоплате!</strong> </li>
+				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1.5"> <strong>Мы работаем только по 100% предоплате!</strong> </li>
 			</ul>
 		</div>
 		<div style="width: 20%; display: flex; justify-content: center; align-items: center; height: 248px;">
@@ -288,12 +282,10 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
 	<div style="font-size: 16px; font-weight: 600;">Безналичный расчет</div>
 </div>--> <br>
 <div style="border-radius: 10px 10px 10px 10px; border: solid #663ab4 2px; box-shadow: 2px 2px 2px grey">
-	<div style="display: flex; justify-content: space-around; flex-wrap: no-wrap;">
+	<div style="display: flex; justify-content: space-around; flex-wrap: nowrap;">
 		<div style="padding: 30px 30px 30px 30px; width: 75%;">
 			<p style="font-size: 22px;">
 				 Для физических лиц
-			</p>
-			<p>
 			</p>
 			<p style="font-size: 18px;">
  <strong>Безналичный расчет</strong>
@@ -301,13 +293,9 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
 			<ul style="list-style-type: none; padding-left: 0px">
 				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem;">
 				После оформления заказа наш менеджер проверит наличие товара на сайте, актуальную цену и сроки поставки, а затем пришлет вам счет для оплаты или КП.</li>
-				<p>
-				</p>
-				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1,5">
+				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1.5">
 				Оплата осуществляется в любом банке. Инструкция по оплате прилагается.</li>
-				<p>
-				</p>
-				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1,5"> <strong>Мы работаем только по 100% предоплате!</strong> </li>
+				<li style="background-image: url(https://oftalmag.ru/upload/medialibrary/d00/vevpcrw4uk3sh507g6wygwe020fabavd.jpg); background-repeat: no-repeat; padding-left: 2rem; background-position: 0 2px; background-size: 1.5rem 1.5rem; line-height: 1.5"> <strong>Мы работаем только по 100% предоплате!</strong> </li>
 			</ul>
 		</div>
 		<div style="width: 20%; display: flex; justify-content: center; align-items: center; height: 248px;">

@@ -2,9 +2,13 @@
 
 use \Bitrix\Main\Localization\Loc;
 
-if($item["PROPERTIES"]["code"]["VALUE"]) {
-	$item['DETAIL_PAGE_URL'] = str_replace($item['CODE'], $item["PROPERTIES"]["code"]["VALUE"], $item['DETAIL_PAGE_URL']);
-	$item['CODE'] = $item["PROPERTIES"]["code"]["VALUE"];
+if (!function_exists('oftalmagIsValidProductCodeSlug')) {
+	require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+}
+$codeProp = trim((string)($item["PROPERTIES"]["code"]["VALUE"] ?? ''));
+if (oftalmagIsValidProductCodeSlug($codeProp)) {
+	$item['DETAIL_PAGE_URL'] = str_replace($item['CODE'], $codeProp, $item['DETAIL_PAGE_URL']);
+	$item['CODE'] = $codeProp;
 }
 ?>
 

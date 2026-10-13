@@ -1060,8 +1060,10 @@ $arParams["MESS_RELATIVE_QUANTITY_FEW"] = $arParams["MESS_RELATIVE_QUANTITY_FEW"
 												$propDisplayValue = is_array($property["DISPLAY_VALUE"])
 													? implode(" / ", $property["DISPLAY_VALUE"])
 													: (string)$property["DISPLAY_VALUE"];
-												$propDisplayValue = html_entity_decode(htmlspecialchars_decode($propDisplayValue));
-												echo preg_replace('/<(?![\/!?a-zA-Z])/', '&lt;', $propDisplayValue);
+												if (!function_exists('oftalmagSanitizeContentHtml')) {
+													require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+												}
+												echo oftalmagSanitizeContentHtml($propDisplayValue);
 												?>
 											</div>
 										</div>

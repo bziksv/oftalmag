@@ -3,6 +3,17 @@
  * Soft HTML cleanup for iblock DETAIL/PREVIEW text and property values.
  * Fixes common validator issues without rewriting editorial content wholesale.
  */
+if (!function_exists('oftalmagIsValidProductCodeSlug')) {
+	/**
+	 * PROPERTY_code suitable for /product/{slug}/ (no spaces/Cyrillic/"Генерация кода…").
+	 */
+	function oftalmagIsValidProductCodeSlug($code)
+	{
+		$code = trim((string)$code);
+		return $code !== '' && (bool)preg_match('/^[a-zA-Z0-9][a-zA-Z0-9_\-]*$/', $code);
+	}
+}
+
 if (!function_exists('oftalmagEscapeBareLt')) {
 	function oftalmagEscapeBareLt($value)
 	{
@@ -27,13 +38,55 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 			return $html;
 		}
 
+		// Decode entity-encoded HTML (possibly double-encoded: &amp;lt;ul&amp;gt;).
+		for ($i = 0; $i < 5; $i++) {
+			if (strpos($html, '&lt;') === false && strpos($html, '&gt;') === false && strpos($html, '&amp;') === false) {
+				break;
+			}
+			$decoded = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			if ($decoded === $html) {
+				break;
+			}
+			$html = $decoded;
+		}
+
+		// Typos: </li<</ul>, </li<<, end tags with attributes.
+		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)<+/', '</$1>', $html);
+		$html = preg_replace('/<\/([a-zA-Z][a-zA-Z0-9]*)\s+[^>]*>/', '</$1>', $html);
+
 		// </p></ul><li> → </p><ul><li>
 		$html = preg_replace('/<\/p>\s*<\/ul>\s*(<li\b)/i', '</p><ul>$1', $html);
 
-		// <h2><p>…</p></h2> → <h2>…</h2>
-		$html = preg_replace(
-			'/<h([1-6])\b([^>]*)>\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*<\/h\1>/i',
-			'<h$1$2>$3</h$1>',
+		// Leading stray closers / trailing stray </span>
+		$html = preg_replace('/^\s*<\/(p|span|div|li|ul|ol)>/i', '', $html);
+		$html = preg_replace('/<\/span>\s*$/i', '', $html);
+
+		// <ul>Label<li>… → <ul><li>Label</li><li>…
+		$html = preg_replace('/(<ul\b[^>]*>)\s*([^<\s][^<]*?)\s*(<li\b)/iu', '$1<li>$2</li>$3', $html);
+
+		// Missing open <li>: …</li>text;</li> or <ul>text;</li>
+		$html = preg_replace('/(<ul\b[^>]*>\s*)([^<\n][^<]*<\/li>)/iu', '$1<li>$2', $html);
+		$html = preg_replace('/(<\/li>\s*)([^<\s][^<]*<\/li>)/iu', '$1<li>$2', $html);
+		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*([^<]+)<\/li>/iu', '<li>$1</li>', $html);
+		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*/i', '', $html);
+
+		// <hN><p>title</p>…blocks…</hN> → <hN>title</hN>…blocks…
+		$html = preg_replace_callback(
+			'/<h([1-6])\b([^>]*)>([\s\S]*?)<\/h\1>/i',
+			static function ($m) {
+				$inner = $m[3];
+				if (!preg_match('/<(ul|ol|div|table)\b/i', $inner) && substr_count(strtolower($inner), '<p') <= 1) {
+					// Simple <hN><p>…</p></hN>
+					if (preg_match('/^\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*$/i', $inner, $im)) {
+						return '<h'.$m[1].$m[2].'>'.trim($im[1]).'</h'.$m[1].'>';
+					}
+					return $m[0];
+				}
+				if (preg_match('/^\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*([\s\S]*)$/i', $inner, $im)) {
+					return '<h'.$m[1].$m[2].'>'.trim(strip_tags($im[1])).'</h'.$m[1].'>'.$im[2];
+				}
+				return $inner;
+			},
 			$html
 		);
 
@@ -47,6 +100,9 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 				$html
 			);
 		}
+
+		// Drop empty list placeholders left inside broken headings.
+		$html = preg_replace('/<ul\b[^>]*>\s*<\/ul>/i', '', $html);
 
 		return oftalmagEscapeBareLt($html);
 	}

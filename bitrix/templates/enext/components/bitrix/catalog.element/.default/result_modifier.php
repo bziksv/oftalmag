@@ -1357,7 +1357,13 @@ require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_conten
 if (!empty($arResult["DISPLAY_PROPERTIES"]) && is_array($arResult["DISPLAY_PROPERTIES"])) {
 	foreach ($arResult["DISPLAY_PROPERTIES"] as &$property) {
 		if (isset($property["DISPLAY_VALUE"])) {
-			$property["DISPLAY_VALUE"] = oftalmagEscapeBareLt($property["DISPLAY_VALUE"]);
+			if (is_array($property["DISPLAY_VALUE"])) {
+				foreach ($property["DISPLAY_VALUE"] as $k => $v) {
+					$property["DISPLAY_VALUE"][$k] = is_string($v) ? oftalmagSanitizeContentHtml($v) : $v;
+				}
+			} elseif (is_string($property["DISPLAY_VALUE"])) {
+				$property["DISPLAY_VALUE"] = oftalmagSanitizeContentHtml($property["DISPLAY_VALUE"]);
+			}
 		}
 		if (isset($property["VALUE"])) {
 			$property["VALUE"] = oftalmagEscapeBareLt($property["VALUE"]);
