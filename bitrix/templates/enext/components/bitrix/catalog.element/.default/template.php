@@ -399,7 +399,7 @@ $arParams["MESS_RELATIVE_QUANTITY_FEW"] = $arParams["MESS_RELATIVE_QUANTITY_FEW"
 											if(isset($arParams["MAIN_BLOCK_PROPERTY_CODE"][$property["CODE"]])) {?>
 												<div class="product-item-detail-properties">
 													<div class="product-item-detail-properties-name"><?=$property["NAME"]?></div>
-													<div class="product-item-detail-properties-val"><?=$property["DISPLAY_VALUE"]?></div>
+													<div class="product-item-detail-properties-val"><?=is_array($property["DISPLAY_VALUE"]) ? implode(" / ", $property["DISPLAY_VALUE"]) : $property["DISPLAY_VALUE"]?></div>
 												</div>
 											<?}
 										}
@@ -1056,7 +1056,13 @@ $arParams["MESS_RELATIVE_QUANTITY_FEW"] = $arParams["MESS_RELATIVE_QUANTITY_FEW"
 										<div class="product-item-detail-properties">
 											<div class="product-item-detail-properties-name"><?=$property["NAME"]?></div>
 											<div class="product-item-detail-properties-val">
-												<?=html_entity_decode(htmlspecialchars_decode($property["DISPLAY_VALUE"]))?>
+												<?
+												$propDisplayValue = is_array($property["DISPLAY_VALUE"])
+													? implode(" / ", $property["DISPLAY_VALUE"])
+													: (string)$property["DISPLAY_VALUE"];
+												$propDisplayValue = html_entity_decode(htmlspecialchars_decode($propDisplayValue));
+												echo preg_replace('/<(?![\/!?a-zA-Z])/', '&lt;', $propDisplayValue);
+												?>
 											</div>
 										</div>
 									<?}

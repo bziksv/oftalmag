@@ -1353,6 +1353,28 @@ if($haveOffers) {
 
 $arResult["BREADCRUMB_TITLE"] = $arResult["PROPERTIES"]["BREADCRUMB_TITLE"]["VALUE"];
 
+require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+if (!empty($arResult["DISPLAY_PROPERTIES"]) && is_array($arResult["DISPLAY_PROPERTIES"])) {
+	foreach ($arResult["DISPLAY_PROPERTIES"] as &$property) {
+		if (isset($property["DISPLAY_VALUE"])) {
+			$property["DISPLAY_VALUE"] = oftalmagEscapeBareLt($property["DISPLAY_VALUE"]);
+		}
+		if (isset($property["VALUE"])) {
+			$property["VALUE"] = oftalmagEscapeBareLt($property["VALUE"]);
+		}
+	}
+	unset($property);
+}
+if (!empty($arResult["DETAIL_TEXT"]) && is_string($arResult["DETAIL_TEXT"])) {
+	$arResult["DETAIL_TEXT"] = oftalmagSanitizeContentHtml($arResult["DETAIL_TEXT"]);
+}
+if (!empty($arResult["PREVIEW_TEXT"]) && is_string($arResult["PREVIEW_TEXT"])) {
+	$arResult["PREVIEW_TEXT"] = oftalmagSanitizeContentHtml($arResult["PREVIEW_TEXT"]);
+}
+if (!empty($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"]) && is_array($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"])) {
+	$arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"] = oftalmagEscapeBareLt($arResult["PROPERTIES"]["EXTRA_OPTIONS"]["DESCRIPTION"]);
+}
+
 $this->__component->SetResultCacheKeys(
 	array(		
 		"PREVIEW_TEXT",

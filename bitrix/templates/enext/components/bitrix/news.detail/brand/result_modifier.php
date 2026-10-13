@@ -1,5 +1,13 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+require_once $_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/html_content_sanitize.php";
+if (!empty($arResult["DETAIL_TEXT"]) && is_string($arResult["DETAIL_TEXT"])) {
+	$arResult["DETAIL_TEXT"] = oftalmagSanitizeContentHtml($arResult["DETAIL_TEXT"]);
+}
+if (!empty($arResult["PREVIEW_TEXT"]) && is_string($arResult["PREVIEW_TEXT"])) {
+	$arResult["PREVIEW_TEXT"] = oftalmagSanitizeContentHtml($arResult["PREVIEW_TEXT"]);
+}
+
 //COLLECTIONS_IDS//
 if($arParams["SHOW_COLLECTIONS"] != "N") {
 	$rsElements = CIBlockElement::GetList(array(), array("ACTIVE" => "Y", "IBLOCK_ID" => $arParams["COLLECTIONS_IBLOCK_ID"], "PROPERTY_BRAND" => $arResult["ID"]), false, false, array("ID", "IBLOCK_ID"));	
