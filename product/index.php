@@ -26,27 +26,22 @@ if($arPageD[2]){
 	}
 
 
-	$arSelect = Array("CODE","PROPERTY_code");
-	$arFilter = Array("IBLOCK_ID"=>26, "ACTIVE_DATE"=>"Y", "ACTIVE"=>"Y","CODE"=>$arPageD[2]);
-	$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>1), $arSelect);
-	if($ob = $res->GetNextElement()){ 
-		$arFields = $ob->GetFields(); 
-
-		if($arFields["PROPERTY_CODE_VALUE"]!='' && $arFields["PROPERTY_CODE_VALUE"]!=$arFields["CODE"]){
-
-		    if (!defined("ERROR_404"))
-		       define("ERROR_404", "Y");
-		    
-		    \CHTTP::setStatus("404 Not Found");
-		       
-		    if ($APPLICATION->RestartWorkarea()) {
-		       require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
-		       die();
-		    }
-
+	// Старые/sitemap URL вида /product/{CODE}/ → канонический /product/{PROPERTY_code}/
+	if($set404 === 'Y') {
+		$arSelect = Array("CODE","PROPERTY_code");
+		$arFilter = Array("IBLOCK_ID"=>26, "ACTIVE_DATE"=>"Y", "ACTIVE"=>"Y","CODE"=>$arPageD[2]);
+		$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>1), $arSelect);
+		if($ob = $res->GetNextElement()){
+			$arFields = $ob->GetFields();
+			$seoCode = (string)$arFields["PROPERTY_CODE_VALUE"];
+			if($seoCode !== '' && $seoCode !== $arFields["CODE"]){
+				LocalRedirect(SITE_DIR."product/".$seoCode."/", true, "301 Moved Permanently");
+			}
+			if($seoCode === '' || $seoCode === $arFields["CODE"]){
+				$propCODE = $arFields["CODE"];
+				$set404 = 'N';
+			}
 		}
-
-
 	}
 
 }

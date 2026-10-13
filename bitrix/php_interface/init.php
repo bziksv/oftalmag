@@ -121,4 +121,11 @@ AddEventHandler('sale', 'OnSaleComponentOrderProperties', ['Oftalmag\\OrderConse
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/LegalRedirect.php';
 AddEventHandler('main', 'OnBeforeProlog', ['Oftalmag\\LegalRedirect', 'onBeforeProlog']);
 
+require_once __DIR__.'/include/SitemapProductUrls.php';
+$eventManager->addEventHandler(
+	'',
+	'\\Bitrix\\Seo\\Sitemap\\Internals\\SitemapTable::OnAfterUpdate',
+	['Oftalmag\\SitemapProductUrls', 'onSitemapAfterUpdate']
+);
+
 
