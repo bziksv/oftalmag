@@ -143,15 +143,23 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 		$html = preg_replace('/<\/li>\s*<ul\b[^>]*>\s*(<\/(?:div|td|p|section|article)|$)/i', '</li></ul>$1', $html);
 		$html = preg_replace('/<\/li>\s*<ul\b[^>]*>\s*<\/ul>/i', '</li>', $html);
 
-		// <ol>…<ul>…</ul>…</ol> → drop redundant inner <ul> wrapper.
-		$html = preg_replace('/(<ol\b[^>]*>)\s*<ul\b[^>]*>/i', '$1', $html);
-		$html = preg_replace('/<\/ul>\s*(<\/ol>)/i', '$1', $html);
+		// <ol><ul>…</ul></ol> (ul — прямой потомок ol) → убрать лишнюю обёртку ul.
+		$html = preg_replace_callback(
+			'/<ol\b([^>]*)>\s*<ul\b[^>]*>([\s\S]*?)<\/ul>\s*<\/ol>/i',
+			static function ($m) {
+				return '<ol'.$m[1].'>'.$m[2].'</ol>';
+			},
+			$html
+		);
 
 		// </p></ul><li> → </p><ul><li>
 		$html = preg_replace('/<\/p>\s*<\/ul>\s*(<li\b)/i', '</p><ul>$1', $html);
 
-		// Leading text without <p>…</p> (stray </p> / bare paragraph).
-		if (preg_match('/^(\s*)([^<\s][\s\S]*?)<\/p>/u', $html, $m) && strpos($m[2], '<') === false) {
+		// Leading text / inline HTML ending with stray </p> (alkom: text<br>…</p>).
+		if (preg_match('/^(\s*)([\s\S]*?)<\/p>/u', $html, $m)
+			&& !preg_match('/<p\b/i', $m[2])
+			&& !preg_match('/<(div|h[1-6]|ul|ol|table|section|article)\b/i', $m[2])
+		) {
 			$html = $m[1].'<p>'.$m[2].'</p>'.substr($html, strlen($m[0]));
 		} elseif (preg_match('/^(\s*)([^<\s][^<]*?)(?=\s*<h[1-6]|\s*<ul|\s*<ol|\s*<div|\s*<p|$)/u', $html, $m)) {
 			$lead = trim($m[2]);
@@ -204,16 +212,22 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 			$html
 		);
 
-		// <li>…</li><ul>…</ul> → <li>…<ul>…</ul></li>
+		// <li>текст</li><ul>…</ul> → <li>текст<ul>…</ul></li>
+		// Не трогаем <li>, внутри которых уже есть вложенные списки/li.
+		// Важно: до вставки </li> перед </ol>, иначе получится </ul></li></li></ol>.
 		$prev = null;
 		while ($prev !== $html) {
 			$prev = $html;
 			$html = preg_replace(
-				'/(<li\b[^>]*>)([\s\S]*?)<\/li>\s*(<ul\b[\s\S]*?<\/ul>)/i',
+				'/(<li\b[^>]*>)((?:(?!<li\b|<ul\b|<ol\b)[\s\S])*?)<\/li>\s*(<ul\b[\s\S]*?<\/ul>)/i',
 				'$1$2$3</li>',
 				$html
 			);
 		}
+
+		// После nest: <ul></ol> без </li> → </ul></li></ol>
+		$html = preg_replace('/<\/ul>\s*(<\/ol>)/i', '</ul></li>$1', $html);
+		$html = preg_replace('/<\/li>\s*<\/li>(\s*<\/ol>)/i', '</li>$1', $html);
 
 		// Drop empty list placeholders left inside broken headings.
 		$html = preg_replace('/<ul\b[^>]*>\s*<\/ul>/i', '', $html);
