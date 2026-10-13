@@ -181,16 +181,19 @@ if (!function_exists('oftalmagSanitizeContentHtml')) {
 		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*([^<]+)<\/li>/iu', '<li>$1</li>', $html);
 		$html = preg_replace('/<li[^>]*>\s*<\/li>\s*/i', '', $html);
 
-		// Orphan <li>…</li> (property values inside <div>) → wrap in <ul>
+		// Orphan <li>…</li> without <ul>/<ol>:
+		// - чистый фрагмент (свойства товара) → обернуть целиком;
+		// - статья/описание с <p>/<hN>/table → обернуть только подряд идущие <li>.
 		if (preg_match('/<li\b/i', $html) && !preg_match('/<(ul|ol)\b/i', $html)) {
-			$html = '<ul>'.$html.'</ul>';
-		} else {
-			// Leading orphan lis before any ul/ol
-			$html = preg_replace(
-				'/^(\s*)((?:<li\b[\s\S]*?<\/li>\s*)+)(?=<|$)/iu',
-				'$1<ul>$2</ul>',
-				$html
-			);
+			if (preg_match('/<(p|h[1-6]|div|table|section|article)\b/i', $html)) {
+				$html = preg_replace(
+					'/((?:<li\b[\s\S]*?<\/li>\s*)+)/iu',
+					'<ul>$1</ul>',
+					$html
+				);
+			} else {
+				$html = '<ul>'.$html.'</ul>';
+			}
 		}
 
 		// <hN><p>title</p>…blocks…</hN> → <hN>title</hN>…blocks…
