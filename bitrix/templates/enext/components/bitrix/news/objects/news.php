@@ -219,6 +219,12 @@ global $arSettings;?>
 			unset($arObject);
 		}
 		
+		if (!isset($mapData) || !is_array($mapData)) {
+			$mapData = array();
+		}
+		if (!isset($mapData["PLACEMARKS"]) || !is_array($mapData["PLACEMARKS"])) {
+			$mapData["PLACEMARKS"] = array();
+		}
 		if($arSettings["MAP_SERVICE"]["VALUE"] != "YANDEX") {
 			if(count($mapData["PLACEMARKS"]) == 1) {
 				$mapData["google_lat"] = $mapData["PLACEMARKS"][0]["LAT"];
