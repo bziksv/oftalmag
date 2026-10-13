@@ -50,7 +50,7 @@ $containerName = "slide-panel-form-".$obName;?>
 		if($arParams["USE_CAPTCHA"]) {?>
 			<div class="form-group captcha">
 				<div class="pic" style="display:none;">								
-					<img src="" width="100" height="36" alt="CAPTCHA" />
+					<img src="/bitrix/images/arturgolubev.lazyload/pixel.gif" width="100" height="36" alt="CAPTCHA" />
 				</div>							
 				<input type="text" maxlength="5" name="CAPTCHA_WORD" class="form-control" placeholder="<?=Loc::getMessage('FORMS_SLIDE_PANEL_CAPTCHA_WORD')?>" />
 				<input type="hidden" name="CAPTCHA_SID" value="" />

@@ -280,7 +280,7 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
 			</ul>
 		</div>
 		<div style="width: 20%; display: flex; justify-content: center; align-items: center; height: 248px;">
- <img src="/upload/medialibrary/e4e/sjft56rzy743fpppgmcngwtre24dmbfh.png" style="width: 100px;">
+ <img src="/upload/medialibrary/e4e/sjft56rzy743fpppgmcngwtre24dmbfh.png" alt="Безналичный расчет для юридических лиц" style="width: 100px;">
 		</div>
 	</div>
 </div>
@@ -311,7 +311,7 @@ $APPLICATION->SetTitle("Оплата и доставка");?><h2>Доставк�
 			</ul>
 		</div>
 		<div style="width: 20%; display: flex; justify-content: center; align-items: center; height: 248px;">
- <img src="/upload/medialibrary/e4e/sjft56rzy743fpppgmcngwtre24dmbfh.png" style="width: 100px;">
+ <img src="/upload/medialibrary/e4e/sjft56rzy743fpppgmcngwtre24dmbfh.png" alt="Безналичный расчет для физических лиц" style="width: 100px;">
 		</div>
 	</div>
 </div>

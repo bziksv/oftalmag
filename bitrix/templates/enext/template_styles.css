@@ -748,6 +748,7 @@ h2, .h2{
 /***DEVELOPER***/
 .footer__developer{
 	float: right;
+	width: 150px;
 }
 
 .footer__developer a{	

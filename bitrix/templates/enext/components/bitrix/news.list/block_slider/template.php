@@ -25,12 +25,13 @@ $obName = 'ob'.preg_replace('/[^a-zA-Z0-9_]/', 'x', $this->GetEditAreaId($this->
 $containerName = 'slider-'.$obName;
 ?>
 
-<style type="text/css">
-	.owl-carousel .animated{
-		-webkit-animation-duration: <?=$smartSpeed?>ms;
-		animation-duration: <?=$smartSpeed?>ms;
-	}
-</style>
+<?
+\Bitrix\Main\Page\Asset::getInstance()->addString(
+	'<style type="text/css">.owl-carousel .animated{-webkit-animation-duration:'.(int)$smartSpeed.'ms;animation-duration:'.(int)$smartSpeed.'ms;}</style>',
+	true,
+	\Bitrix\Main\Page\AssetLocation::AFTER_CSS
+);
+?>
 
 <div class="slider-wrapper">
 	<div class="slider" id="<?=$containerName?>">		
@@ -41,8 +42,8 @@ $containerName = 'slider-'.$obName;
 			<?=(!empty($arItem["DISPLAY_PROPERTIES"]["VIDEO"]["FILE_VALUE"]) ? " data-video-src='".$arItem["DISPLAY_PROPERTIES"]["VIDEO"]["FILE_VALUE"]["SRC"]."'" : "").
 			(!empty($arItem["DISPLAY_PROPERTIES"]["VIDEO"]["FILE_VALUE"]) && !empty($arItem["DISPLAY_PROPERTIES"]["VIDEO_WIDTH"]["VALUE"]) ? " data-video-width='".$arItem["DISPLAY_PROPERTIES"]["VIDEO_WIDTH"]["VALUE"]."'" : "").
 			(!empty($arItem["DISPLAY_PROPERTIES"]["VIDEO"]["FILE_VALUE"]) && !empty($arItem["DISPLAY_PROPERTIES"]["VIDEO_HEIGHT"]["VALUE"]) ? " data-video-height='".$arItem["DISPLAY_PROPERTIES"]["VIDEO_HEIGHT"]["VALUE"]."'" : "").
-			(!empty($arItem["PREVIEW_PICTURE"]) ? "data-image-src='".$arItem["PREVIEW_PICTURE"]["SRC"]."' data-image-width='".$arItem["PREVIEW_PICTURE"]["WIDTH"]."' data-image-height='".$arItem["PREVIEW_PICTURE"]["HEIGHT"]."' data-image-alt='".$arItem["NAME"]."'" : "").
-			(!empty($arItem["MOBILE_PICTURE"]) ? "data-image-mobile-src='".$arItem["MOBILE_PICTURE"]["SRC"]."' data-image-mobile-width='".$arItem["MOBILE_PICTURE"]["WIDTH"]."' data-image-mobile-height='".$arItem["MOBILE_PICTURE"]["HEIGHT"]."'" : "")
+			(!empty($arItem["PREVIEW_PICTURE"]) ? " data-image-src='".$arItem["PREVIEW_PICTURE"]["SRC"]."' data-image-width='".$arItem["PREVIEW_PICTURE"]["WIDTH"]."' data-image-height='".$arItem["PREVIEW_PICTURE"]["HEIGHT"]."' data-image-alt='".htmlspecialcharsbx($arItem["NAME"])."'" : "").
+			(!empty($arItem["MOBILE_PICTURE"]) ? " data-image-mobile-src='".$arItem["MOBILE_PICTURE"]["SRC"]."' data-image-mobile-width='".$arItem["MOBILE_PICTURE"]["WIDTH"]."' data-image-mobile-height='".$arItem["MOBILE_PICTURE"]["HEIGHT"]."'" : "")
 			?>>
 				<div class="slider-item__caption<?=(!empty($arItem['DISPLAY_PROPERTIES']['ALIGN']['VALUE_XML_ID']) ? ' '.$arItem['DISPLAY_PROPERTIES']['ALIGN']['VALUE_XML_ID'] : '').(!empty($arItem['DISPLAY_PROPERTIES']['VERTICAL_ALIGN']['VALUE_XML_ID']) ? ' '. $arItem['DISPLAY_PROPERTIES']['VERTICAL_ALIGN']['VALUE_XML_ID'] : '');?>" id="<?=$this->GetEditAreaId($arItem['ID'])?>">
 					<div class="container">

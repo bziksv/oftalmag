@@ -22,7 +22,7 @@ if ($arResult["ITEMS"][0]) {
 	ob_start();
 ?>
 	<div id="nca-cookiesaccept-line" class="nca-cookiesaccept-line style-<?=$arResult["SETSTYLE"]?> <?if ($arResult["HIDE_MOBILE"] == "Y") :?>nca-hidden-mobile<? endif; ?> <?if ($arResult["HIDE_PC"] == "Y") :?>nca-hidden-pc<? endif; ?>">
-		<div id="nca-nca-position-<?=$arResult["POSITION"]?>"id="nca-bar" class="nca-bar nca-style- nca-animation-<?=$arResult["ANIMATION"]?> nca-position-<?=$arResult["POSITION"]?>">
+		<div id="nca-bar" class="nca-bar nca-style- nca-animation-<?=$arResult["ANIMATION"]?> nca-position-<?=$arResult["POSITION"]?>">
 			<div class="nca-cookiesaccept-line-text"><?=htmlspecialchars_decode($arResult["MAINTEXT"])?></div> 
 			<div><button type="button" id="nca-cookiesaccept-line-accept-btn" onclick="ncaCookieAcceptBtn()" ><?=$arResult["TEXTBTN"]?></button></div>
 		</div>

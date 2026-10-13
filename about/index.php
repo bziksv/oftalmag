@@ -14,19 +14,19 @@ $APPLICATION->SetTitle("О магазине ");?><p>
 </ul>
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
 	<div style="width: 350px;">
- <img src="/upload/iblock/b3f/rrirrmnkkctmmucw8thjj952n1r8ycy1.jpg">
+ <img src="/upload/iblock/b3f/rrirrmnkkctmmucw8thjj952n1r8ycy1.jpg" alt="Радиохирургический аппарат RadioSURG 2200">
 		<p style="text-align: center;">
 			 Радиохирургический аппарат RadioSURG 2200
 		</p>
 	</div>
 	<div style="width: 350px;">
- <img src="/upload/iblock/a8b/wfzpa1bg0ahjxrwrw55q373haxfvyq30.jpg">
+ <img src="/upload/iblock/a8b/wfzpa1bg0ahjxrwrw55q373haxfvyq30.jpg" alt="Рефрактокератометр автоматический GR-2200, Rexxam">
 		<p style="text-align: center;">
 			 Рефрактокератометр автоматический GR-2200, Rexxam
 		</p>
 	</div>
 	<div style="width: 350px;">
- <img src="/upload/iblock/805/zow27e6637697tl5qaq5kdkcon463y4h.jpg">
+ <img src="/upload/iblock/805/zow27e6637697tl5qaq5kdkcon463y4h.jpg" alt="Офтальмологический проектор знаков AP250 Reichert">
 		<p style="text-align: center;">
 			 Офтальмологический проектор знаков AP250 Reichert
 		</p>
