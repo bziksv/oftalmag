@@ -12,11 +12,7 @@ function oftalmagCatalogRedirectMap(): array
 		'/catalog/product/linza-goldmana-trekhzerkalnaya-goniolinza-gonioskop/'
 			=> '/product/linza-goldmana-trekhzerkalnaya/',
 
-		// Деактивированный подраздел → живой родитель
-		'/catalog/lineyka-skiaskopicheskaya-orion-medik/'
-			=> '/catalog/lineyki-skiaskopicheskie/',
-
-		// Старый код раздела без -r
+		// Старый код раздела без -r → актуальный Surgicon
 		'/catalog/oftalmologiya-surgicon-pakistan/'
 			=> '/catalog/oftalmologiya-surgicon-pakistan-r/',
 	];
@@ -46,8 +42,7 @@ function oftalmagCatalogRedirectTarget(string $requestUri): ?string
 		}
 	}
 
-	// Универсально: /catalog/product/{slug}/ → /product/{slug}/
-	// (карточки давно на /product/; slug уточнит product/index.php)
+	// /catalog/product/{slug}/ → /product/{slug}/
 	if (preg_match('#^/catalog/product/([^/]+)/?$#', $path, $m)) {
 		return '/product/' . rawurlencode(rawurldecode($m[1])) . '/';
 	}
@@ -62,9 +57,26 @@ function oftalmagCatalogRedirectPerform(string $requestUri): bool
 		return false;
 	}
 
+	// Не редиректить на тот же path (защита от петли).
+	$path = (string)(parse_url($requestUri, PHP_URL_PATH) ?: '/');
+	$targetPath = (string)(parse_url($target, PHP_URL_PATH) ?: $target);
+	if (rtrim($path, '/') === rtrim($targetPath, '/')) {
+		return false;
+	}
+
 	$query = parse_url($requestUri, PHP_URL_QUERY);
 	if (is_string($query) && $query !== '') {
-		$target .= (str_contains($target, '?') ? '&' : '?') . $query;
+		$target .= (strpos($target, '?') !== false ? '&' : '?') . $query;
+	}
+
+	if (isset($_SERVER['HTTP_HOST']) && $target !== '' && $target[0] === '/') {
+		$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+			|| ((string)($_SERVER['SERVER_PORT'] ?? '') === '443');
+		$target = ($https ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $target;
+	}
+
+	if (function_exists('LocalRedirect')) {
+		LocalRedirect($target, true, '301 Moved Permanently');
 	}
 
 	http_response_code(301);
