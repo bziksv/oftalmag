@@ -20,6 +20,11 @@ class LegalRedirect
 		}
 
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/redirects.php';
-		oftalmagLegalRedirectPerform($uri);
+		if (oftalmagLegalRedirectPerform($uri)) {
+			return;
+		}
+
+		require_once $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/catalog/redirects.php';
+		oftalmagCatalogRedirectPerform($uri);
 	}
 }
