@@ -8,4 +8,5 @@ $MESS["FORMS_SLIDE_PANEL_EMAIL_INVALID"] = "Некорректный E-MAIL";
 $MESS["FORMS_SLIDE_PANEL_USER_CONSENT_NOT_EMPTY_INVALID"] = "Согласитесь с условиями";
 $MESS["FORMS_SLIDE_PANEL_CAPTCHA_WRONG"] = "Неверный код";
 $MESS["FORMS_SLIDE_PANEL_ALERT_SUCCESS"] = "Ваше сообщение отправлено.<br />Мы постараемся ответить вам максимально быстро.<br />Ответ будет направлен на почту.";
+$MESS["FORMS_SLIDE_PANEL_ALERT_SUCCESS_CALLBACK"] = "Заявка на звонок принята.<br />Мы перезвоним вам в ближайшее время.";
 $MESS["FORMS_SLIDE_PANEL_ALERT_ERROR"] = "Ошибка! Ваше сообщение не отправлено";
