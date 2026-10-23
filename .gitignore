@@ -34,6 +34,8 @@ upload/tmp/
 
 # --- Пользовательские файлы / медиа ---
 upload/*
+# Юридические PNG (генерируются scripts/generate-legal-images.sh)
+!upload/*-oftalmag.png
 
 # --- Логи ---
 *.log
