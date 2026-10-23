@@ -118,6 +118,10 @@ AddEventHandler('sale', 'OnSaleComponentOrderOneStepComplete', ['Oftalmag\\Order
 require_once __DIR__.'/include/OrderConsent.php';
 AddEventHandler('sale', 'OnSaleComponentOrderProperties', ['Oftalmag\\OrderConsent', 'onOrderProperties']);
 
+require_once __DIR__.'/include/RegisterConsent.php';
+AddEventHandler('main', 'OnBeforeUserRegister', ['Oftalmag\\RegisterConsent', 'onBeforeUserRegister']);
+AddEventHandler('main', 'OnAfterUserRegister', ['Oftalmag\\RegisterConsent', 'onAfterUserRegister']);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/include/legal/LegalRedirect.php';
 AddEventHandler('main', 'OnBeforeProlog', ['Oftalmag\\LegalRedirect', 'onBeforeProlog']);
 
